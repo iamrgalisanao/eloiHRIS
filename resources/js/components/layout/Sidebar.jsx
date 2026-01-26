@@ -9,6 +9,7 @@ const Sidebar = () => {
         { icon: '🏷️', label: 'Hiring', path: '/hiring' },
         { icon: '📊', label: 'Reports', path: '/reports' },
         { icon: '📂', label: 'Files', path: '/files' },
+        { icon: '⚙️', label: 'Settings', path: '/settings' },
     ];
 
     return (

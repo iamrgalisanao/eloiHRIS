@@ -8,20 +8,31 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Get the 'Golden Record' for the current user.
-     * For Phase 1/2 demo, we return the first employee.
-     */
-    public function me()
+    public function index()
     {
-        $employee = Employee::with(['jobInfo', 'user'])
-            ->first();
+        $employees = Employee::with(['jobInfo', 'user'])->get()->map(function ($emp) {
+            return [
+                'id' => $emp->id,
+                'name' => $emp->user->name,
+                'job_title' => $emp->jobInfo->job_title ?? 'N/A',
+                'department' => $emp->jobInfo->department ?? 'N/A',
+                'email' => $emp->user->email,
+                'employee_number' => $emp->employee_number,
+                'status' => $emp->status,
+            ];
+        });
+
+        return response()->json($employees);
+    }
+
+    public function show($id)
+    {
+        $employee = Employee::with(['jobInfo', 'user'])->find($id);
 
         if (!$employee) {
             return response()->json(['message' => 'Employee not found'], 404);
         }
 
-        // Format for the frontend
         return response()->json([
             'id' => $employee->id,
             'name' => $employee->user->name,
@@ -30,15 +41,19 @@ class EmployeeController extends Controller
             'email' => $employee->user->email,
             'employee_number' => $employee->employee_number,
             'manager' => [
-                'name' => 'David Wallace' // Static for now as per mock
+                'name' => 'Michael Scott'
             ]
         ]);
     }
 
-    public function timeOffBalance()
+    public function me()
     {
-        $employee = Employee::with(['timeOffBalances', 'timeOffRequests'])
-            ->first();
+        return $this->show(1);
+    }
+
+    public function timeOffBalance($id)
+    {
+        $employee = Employee::with(['timeOffBalances', 'timeOffRequests'])->find($id);
 
         if (!$employee) {
             return response()->json(['message' => 'Employee not found'], 404);
@@ -50,9 +65,9 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function customTabs()
+    public function customTabs($id)
     {
-        $employee = Employee::first(); // Demo targets Michael Scott
+        $employee = Employee::find($id);
 
         if (!$employee) {
             return response()->json(['message' => 'Employee not found'], 404);

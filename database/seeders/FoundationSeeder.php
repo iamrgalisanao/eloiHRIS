@@ -90,5 +90,78 @@ class FoundationSeeder extends Seeder
             'field_id' => $shirtField->id,
             'value' => 'Large (Michael edition)'
         ]);
+
+        // Seed Coworkers
+        $coworkers = [
+            ['name' => 'Dwight Schrute', 'email' => 'dwight@dundermifflin.com', 'title' => 'Assistant to the Regional Manager', 'dept' => 'Sales', 'num' => 'EMP-002'],
+            ['name' => 'Jim Halpert', 'email' => 'jim@dundermifflin.com', 'title' => 'Sales Representative', 'dept' => 'Sales', 'num' => 'EMP-003'],
+            ['name' => 'Pam Beesly', 'email' => 'pam@dundermifflin.com', 'title' => 'Receptionist', 'dept' => 'Administration', 'num' => 'EMP-004'],
+            ['name' => 'Stanley Hudson', 'email' => 'stanley@dundermifflin.com', 'title' => 'Sales Representative', 'dept' => 'Sales', 'num' => 'EMP-005'],
+        ];
+
+        foreach ($coworkers as $cw) {
+            $userObj = \App\Models\User::create([
+                'organization_id' => $org->id,
+                'name' => $cw['name'],
+                'email' => $cw['email'],
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            ]);
+
+            $empObj = \App\Models\Employee::create([
+                'organization_id' => $org->id,
+                'user_id' => $userObj->id,
+                'employee_number' => $cw['num'],
+                'status' => 'active',
+                'reports_to_id' => $employee->id // Reports to Michael
+            ]);
+
+            \App\Models\JobInfo::create([
+                'organization_id' => $org->id,
+                'employee_id' => $empObj->id,
+                'job_title' => $cw['title'],
+                'hire_date' => '2005-03-24',
+                'department' => $cw['dept']
+            ]);
+
+            \App\Models\TimeOffBalance::create([
+                'organization_id' => $org->id,
+                'employee_id' => $empObj->id,
+                'leave_type' => 'Vacation',
+                'accrued_hours' => 80.00,
+                'taken_hours' => 0.00,
+            ]);
+
+            \App\Models\CustomFieldValue::create([
+                'organization_id' => $org->id,
+                'employee_id' => $empObj->id,
+                'field_id' => $shirtField->id,
+                'value' => 'Medium'
+            ]);
+        }
+
+        // Seed Hiring/ATS
+        $job = \App\Models\JobOpening::create([
+            'organization_id' => $org->id,
+            'title' => 'Junior Accountant',
+            'department' => 'Accounting',
+            'description' => 'Looking for someone with a passion for numbers and a tolerance for office politics.',
+            'status' => 'open'
+        ]);
+
+        \App\Models\Candidate::create([
+            'organization_id' => $org->id,
+            'job_opening_id' => $job->id,
+            'name' => 'Oscar Martinez',
+            'email' => 'oscar@accounting-pro.com',
+            'status' => 'interviewing'
+        ]);
+
+        \App\Models\Candidate::create([
+            'organization_id' => $org->id,
+            'job_opening_id' => $job->id,
+            'name' => 'Kevin Malone',
+            'email' => 'kevin@chili-time.com',
+            'status' => 'applied'
+        ]);
     }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
@@ -10,7 +11,7 @@ const Header = () => {
                 <div className="action-icons-group">
                     <span className="action-icon">🔔</span>
                     <span className="action-icon">📂</span>
-                    <span className="action-icon">⚙️</span>
+                    <Link to="/settings" className="action-icon">⚙️</Link>
                 </div>
                 <div className="user-profile-trigger">
                     <div className="user-avatar-small">MK</div>

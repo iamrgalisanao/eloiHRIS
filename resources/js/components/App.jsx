@@ -6,33 +6,187 @@ import ProfileHeader from './ProfileHeader';
 import TimeOffRequestModal from './TimeOffRequestModal';
 import TimeOffCalculatorModal from './TimeOffCalculatorModal';
 
-// Page Mock Components
+// --- Dashboard Icons ---
+const IconCalendar = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>;
+const IconGift = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12" /><rect width="20" height="5" x="2" y="7" /><line x1="12" x2="12" y1="22" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></svg>;
+const IconAnnounce = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>;
+const IconTarget = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>;
+const IconGraduation = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2v-5" /></svg>;
+const IconChart = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>;
+const IconDollar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>;
+const IconParty = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.8 11.3 2 22l10.7-3.8M4 14.8l.7 3.9M13.5 4.4l3 3m-5-2 4 4M15 2l5 5" /><circle cx="17.5" cy="6.5" r="2.5" /></svg>;
+const IconUserPlus = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>;
+const IconLink = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>;
+const IconBadge = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /></svg>;
+const IconClock = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>;
+const IconSliders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" /><line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" /><line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" /><line x1="2" y1="14" x2="6" y2="14" /><line x1="10" y1="8" x2="14" y2="8" /><line x1="18" x2="18" y1="16" y2="16" /></svg>;
+const IconExpand = ({ isExpanded }) => isExpanded ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14h6v6" /><path d="m10 14-6 6" /><path d="M20 10h-6V4" /><path d="m14 10 6-6" /></svg>
+) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
+);
+const IconDirectReports = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>;
+const IconAlarm = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="14" r="7" />
+        <path d="M12 11v3l2 2" />
+        <path d="m5 4 3-2" />
+        <path d="m19 4-3-2" />
+        <path d="m5 20 2-2" />
+        <path d="m19 20-2-2" />
+    </svg>
+);
+const IconCalendarClock = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M3 10h18" />
+        <path d="M8 2v4" />
+        <path d="M16 2v4" />
+        <circle cx="16" cy="16" r="4" />
+        <path d="M16 14v2h2" />
+    </svg>
+);
+const IconPalm = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8c0 1.1.9 2 2 2" />
+        <path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5 0 1.1-.9 2-2 2" />
+        <path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43" />
+        <path d="M18.11 12.71c2.15 2.15 2.3 5.47.35 7.43" />
+        <path d="M12 11v10" />
+        <path d="M9 21h6" />
+    </svg>
+);
+const IconMegaphone = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m3 11 18-5v12L3 13v-2z" />
+        <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </svg>
+);
+const IconCompass = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" />
+    </svg>
+);
+const IconProfile = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
+);
+const IconChevronRight = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m9 18 6-6-6-6" />
+    </svg>
+);
+const IconSignature = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m15 5 4 4" />
+        <path d="M13 7 3.83 16.17a2 2 0 0 0 0 2.83l.83.83" />
+        <path d="m6.33 19.33 1.34 1.34a2 2 0 0 0 2.83 0L19.33 11" />
+        <path d="m6.33 19.33.67-.67" />
+        <path d="m10.5 12.5 1 1" />
+    </svg>
+);
+const IconCheckCircle = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <path d="m9 11 3 3L22 4" />
+    </svg>
+);
+const IconCalculator = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="16" height="20" x="4" y="2" rx="2" />
+        <line x1="8" x2="16" y1="6" y2="6" />
+        <line x1="16" x2="16" y1="14" y2="18" />
+        <path d="M16 10h.01" />
+        <path d="M12 10h.01" />
+        <path d="M8 10h.01" />
+        <path d="M12 14h.01" />
+        <path d="M8 14h.01" />
+        <path d="M12 18h.01" />
+        <path d="M8 18h.01" />
+    </svg>
+);
+
+// --- Components ---
+const DashboardCard = ({ id, index, title, icon: Icon, children, padding = "24px", colSpan = 4, fullWidth = false, expandedCard, setExpandedCard, hideActions = false }) => {
+    const isExpanded = expandedCard === id;
+    const toggleExpand = () => setExpandedCard(isExpanded ? null : id);
+
+    return (
+        <div
+            id={id}
+            className={`glass-panel dashboard-card ${isExpanded ? 'is-expanded' : ''} ${fullWidth ? 'full-width-card' : ''}`}
+            data-index={index}
+            style={{
+                padding: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                zIndex: isExpanded ? 50 : 1
+            }}
+        >
+            <div className="card-header">
+                <div className="card-title-content">
+                    <Icon />
+                    <span className="font-heading">{title}</span>
+                </div>
+                {!hideActions && (
+                    <div className="card-actions" style={{ display: 'flex', gap: '8px' }}>
+                        <button style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-light)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
+                            <IconSliders />
+                        </button>
+                        <button onClick={toggleExpand} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-light)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
+                            <IconExpand isExpanded={isExpanded} />
+                        </button>
+                    </div>
+                )}
+            </div>
+            <div style={{ padding, flex: 1, overflow: isExpanded ? 'auto' : 'hidden' }}>
+                {children}
+            </div>
+        </div>
+    );
+};
+
 const Home = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+    const [expandedCard, setExpandedCard] = useState('activity');
 
     useEffect(() => {
+        let isMounted = true;
         fetch('/api/dashboard/stats')
             .then(res => res.json())
             .then(data => {
-                setStats(data);
-                setLoading(false);
+                if (isMounted) {
+                    setStats(data);
+                    setLoading(false);
+                }
+            })
+            .catch(err => {
+                console.error("Dashboard fetch error:", err);
+                if (isMounted) setLoading(false);
             });
+        return () => { isMounted = false; };
     }, []);
 
-    if (loading) return <div className="glass-panel" style={{ padding: '32px' }}>Loading Dashboard...</div>;
+    if (loading || !stats) {
+        return <div className="glass-panel" style={{ padding: '32px' }}>Loading Dashboard...</div>;
+    }
 
-    const vacationBalance = stats.personal_balances.find(b => b.leave_type === 'Vacation') || { total_hours: 0, taken_hours: 0 };
-    const sickBalance = stats.personal_balances.find(b => b.leave_type === 'Sick') || { total_hours: 0, taken_hours: 0 };
+    const getBalance = (type) => {
+        const bal = (stats.personal_balances || []).find(b => b.leave_type === type);
+        const total = Number(bal?.total_hours) || 0;
+        const taken = Number(bal?.taken_hours) || 0;
+        return (total - taken).toFixed(type === 'Vacation' ? 1 : 0);
+    };
 
-    const IconCalendar = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>;
-    const IconGift = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12" /><rect width="20" height="5" x="2" y="7" /><line x1="12" x2="12" y1="22" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></svg>;
-    const IconAnnounce = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>;
-    const IconTarget = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>;
-    const IconGraduation = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2v-5" /></svg>;
-    const IconChart = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>;
-    const IconDollar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>;
+    const availVacation = getBalance('Vacation');
+    const availSick = getBalance('Sick');
+
+    const isGridExpanded = expandedCard && !['direct-reports', 'time-off-requests'].includes(expandedCard);
 
     return (
         <div className="personal-dashboard">
@@ -43,10 +197,10 @@ const Home = () => {
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <div style={{
-                        width: '80px', height: '80px', borderRadius: '16px', background: '#7e7e7e',
+                        width: '80px', height: '80px', borderRadius: '16px', background: 'var(--primary)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
                     }}>
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                     </div>
                     <div>
                         <h1 className="font-heading" style={{
@@ -82,153 +236,212 @@ const Home = () => {
             </div>
 
             <div className="dashboard-rows-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                {/* First Row: 4/12 and 8/12 grid */}
-                <div className="dashboard-row">
-                    <div className="dashboard-col" style={{ gridColumn: 'span 4' }}>
-                        {/* Time Off Card */}
-                        <div className="glass-panel" style={{ padding: '24px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px', color: 'var(--primary)', fontWeight: '700' }}>
-                                <IconCalendar />
-                                <span className="font-heading">Time Off</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
-                                <div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Vacation</div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
-                                        <span style={{ fontSize: '1.4rem' }}>🌴</span>
-                                        <span style={{ fontSize: '2.4rem', fontWeight: '800', color: 'var(--text-main)' }}>
-                                            {(vacationBalance.total_hours - vacationBalance.taken_hours).toFixed(1)}
-                                        </span>
-                                    </div>
-                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>hours available</div>
+                {/* Row 1: Fixed Layout Grid (Time Off, My Stuff, Activity) */}
+                <div className="dashboard-fixed-grid">
+                    {/* Card: Time Off */}
+                    <DashboardCard id="time-off" title="Time Off" icon={IconCalendar} hideActions>
+                        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: '10px 0' }}>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1e293b', marginBottom: '16px' }}>Vacation</div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                                    <IconPalm size={48} color="#1e293b" />
+                                    <span style={{ fontSize: '3.6rem', fontWeight: '800', color: '#5cb85c', letterSpacing: '-2px' }}>{availVacation}</span>
+                                    <button style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #e2e8f0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
+                                        <IconChevronRight size={18} />
+                                    </button>
                                 </div>
-                                <div style={{ width: '1px', background: 'var(--border-light)', height: '60px', alignSelf: 'center' }}></div>
-                                <div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Sick</div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
-                                        <span style={{ fontSize: '1.4rem' }}>🏥</span>
-                                        <span style={{ fontSize: '2.4rem', fontWeight: '800', color: 'var(--text-main)' }}>
-                                            {(sickBalance.total_hours - sickBalance.taken_hours).toFixed(0)}
-                                        </span>
-                                    </div>
-                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>hours available</div>
-                                </div>
+                                <div style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: '600', marginTop: '4px' }}>hours available</div>
+                                <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '8px' }}>8 hours scheduled</div>
                             </div>
-                            <div style={{ display: 'flex', gap: '12px', marginTop: '32px' }}>
-                                <button className="btn-primary" style={{ flex: 1, background: '#fff', color: 'var(--primary)', border: '1.5px solid var(--primary)', padding: '12px', borderRadius: '24px', fontWeight: '700', fontSize: '0.9rem' }}>
+
+                            <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+                                <button className="btn-primary" style={{ flex: 1, height: '44px', borderRadius: '22px', background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                    <IconCalendar size={18} />
                                     Request Time Off
                                 </button>
-                                <button onClick={() => setIsCalculatorOpen(true)} style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1px solid var(--border-light)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)', transition: 'all 0.2s' }}>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="16" height="20" x="4" y="2" rx="2" /><line x1="8" x2="16" y1="6" y2="6" /><line x1="8" x2="16" y1="14" y2="14" /></svg>
+                                <button style={{ width: '44px', height: '44px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--primary)' }}>
+                                    <IconCalculator size={20} />
                                 </button>
                             </div>
                         </div>
+                    </DashboardCard>
 
-                        {/* My Stuff Card */}
-                        <div className="glass-panel" style={{ padding: '24px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', color: 'var(--primary)', fontWeight: '700' }}>
-                                <IconGift />
-                                <span className="font-heading">My Stuff</span>
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                                {[
-                                    { icon: <IconTarget />, label: 'Goals', sub: '4 active goals' },
-                                    { icon: <IconGraduation />, label: 'Training', sub: '3 certificates' },
-                                    { icon: <IconChart />, label: 'Performance', sub: 'Last review: Dec' }
-                                ].map((item, i) => (
-                                    <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(92, 184, 92, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
-                                        <div>
-                                            <div style={{ fontWeight: '600', fontSize: '0.95rem' }}>{item.label}</div>
-                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{item.sub}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Activity Column */}
-                    <div className="glass-panel" style={{ gridColumn: 'span 8', padding: '32px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', color: 'var(--primary)', fontWeight: '700' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(92, 184, 92, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconAnnounce /></div>
-                            <span className="font-heading" style={{ fontSize: '1.4rem' }}>What's happening at {stats.user.name.split(' ')[0]}soft</span>
-                        </div>
-
-                        <div className="activity-feed" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                            <div style={{ display: 'flex', gap: '20px' }}>
-                                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#fff1f2', border: '1px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e11d48' }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                </div>
-                                <div style={{ flex: 1, paddingBottom: '16px', borderBottom: '1px solid var(--border-light)' }}>
-                                    <div style={{ fontSize: '1rem', fontWeight: '600', color: '#1e293b' }}>Employee Assessments Overdue</div>
-                                    <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                        Please complete the assessments on the Performance tab for each of your direct reports.
-                                        <div style={{ marginTop: '8px' }}>
-                                            <span style={{ background: '#fff1f2', color: '#e11d48', padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '700' }}>OVERDUE: NOV 30</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {stats.upcoming_time_off.map((off, i) => (
-                                <div key={i} style={{ display: 'flex', gap: '20px' }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#f8fafc', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
-                                        <img src={`https://i.pravatar.cc/150?u=${off.name}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    </div>
-                                    <div style={{ flex: 1, paddingBottom: '16px', borderBottom: '1px solid var(--border-light)' }}>
-                                        <div style={{ fontSize: '1rem', color: '#1e293b' }}>
-                                            <strong>{off.name}</strong> requested <strong>{off.type}</strong> off
-                                        </div>
-                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                            Requested {i + 1} day ago for upcoming period
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Second Row: Full Width Reports */}
-                <div className="dashboard-row">
-                    <div className="glass-panel" style={{ gridColumn: 'span 12', padding: '32px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--primary)', fontWeight: '700' }}>
-                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(92, 184, 92, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                                </div>
-                                <span className="font-heading" style={{ fontSize: '1.4rem' }}>My Direct Reports (12)</span>
-                            </div>
-                            <Link to="/people" style={{ color: 'var(--primary)', fontWeight: '600', fontSize: '0.9rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                View Directory <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-                            </Link>
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '32px' }}>
+                    {/* Card: My Stuff */}
+                    <DashboardCard id="my-stuff" title="My Stuff" icon={IconGift} hideActions>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                             {[
-                                { name: 'Maja Andev', avatar: 'https://i.pravatar.cc/150?u=maja', out: 'Out Feb 5-6', role: 'UX Designer' },
-                                { name: 'Eric Asture', avatar: 'https://i.pravatar.cc/150?u=eric', out: 'Out Jan 30', role: 'Frontend Dev' },
-                                { name: 'Cheryl Barnet', avatar: 'https://i.pravatar.cc/150?u=cheryl', out: 'Out Feb 4-5', role: 'Backend Lead' },
-                                { name: 'Jake Bryan', avatar: 'https://i.pravatar.cc/150?u=jake', out: 'Out Feb 7-8', role: 'Product Manager' },
-                                { name: 'Jennifer Caldwell', avatar: 'https://i.pravatar.cc/150?u=jennifer', out: 'Out Jan 31', role: 'QA Engineer' },
-                                { name: 'Dorothy Chou', avatar: 'https://i.pravatar.cc/150?u=dorothy', out: 'Out Feb 8-9', role: 'HR Specialist' }
-                            ].map((person, i) => (
-                                <div key={i} style={{ textAlign: 'center', padding: '16px', borderRadius: '16px', transition: 'background 0.2s', cursor: 'pointer' }} className="report-card-hover">
-                                    <div style={{ width: '80px', height: '80px', borderRadius: '24px', margin: '0 auto 16px', overflow: 'hidden', border: '4px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
-                                        <img src={person.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                { label: 'Goals', sub: '4 goals, soonest is due Apr 8', icon: <IconCheckCircle /> },
+                                { label: 'Training', sub: '4 active trainings, 3 past due or expired', icon: <IconGraduation /> },
+                                { label: 'Compensation Benchmarks', sub: 'Compare your pay with similar orgs', icon: <IconChart /> },
+                                { label: 'Compensation Planning Worksheets', sub: 'Plan out the right combination of salaries, bonuses, and equity', icon: <IconDollar /> }
+                            ].map((item, i) => (
+                                <div key={i} style={{ padding: '14px 0', display: 'flex', gap: '16px', alignItems: 'center', borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none' }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f8fafc', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        {item.icon}
                                     </div>
-                                    <div style={{ fontSize: '0.95rem', fontWeight: '700', color: '#1e293b' }}>{person.name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>{person.role}</div>
-                                    {person.out && (
-                                        <div style={{ marginTop: '12px', fontSize: '0.7rem', color: 'var(--primary)', background: 'rgba(92, 184, 92, 0.08)', padding: '4px 8px', borderRadius: '12px', display: 'inline-block', fontWeight: '600' }}>
-                                            {person.out}
-                                        </div>
-                                    )}
+                                    <div>
+                                        <div style={{ fontSize: '0.95rem', fontWeight: '700', color: '#334155' }}>{item.label}</div>
+                                        <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{item.sub}</div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </DashboardCard>
+
+                    {/* Card: What's Happening */}
+                    <DashboardCard id="activity" title="What's happening at Eloisoft" icon={IconMegaphone} hideActions>
+                        <div className="activity-feed" style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                            {[
+                                { title: 'Take a moment to complete your Employee Assessments.', sub: 'Complete the assessments on the Performance tab on each employee\'s profile.', highlight: 'Please complete by Nov 30 (57 days ago).', badge: 'PAST DUE', icon: <IconCompass size={32} /> },
+                                { title: 'Take a few minutes to complete your Self Assessment.', highlight: 'Please complete your assessment by Dec 1 (56 days ago).', badge: 'PAST DUE', icon: <IconProfile size={32} /> },
+                                { title: 'Charlotte Abbott requested Friday, Jul 5 off – 40 hours of Vacation', sub: '2 months ago', avatar: 'https://i.pravatar.cc/150?u=charlotte' },
+                                { title: 'Olivia Sterling made a request: Compensation request for Ashley Adams.', sub: '3 months ago', icon: <IconProfile size={32} /> },
+                                { title: 'Background_Check_Auth.pdf is waiting for your signature!', sub: '4 months ago', icon: <IconSignature size={32} /> },
+                                { title: 'Javier Cruz is requesting an update to their personal information.', sub: '4 months ago', avatar: 'https://i.pravatar.cc/150?u=javier' },
+                                { title: 'I-9 (2024) is waiting for your signature!', sub: '4 months ago', icon: <IconSignature size={32} /> },
+                                { title: 'Maja Pandev requested Sunday, Feb 3 off – 40 hours of Vacation', sub: '4 months ago', avatar: 'https://i.pravatar.cc/150?u=maja' }
+                            ].map((item, i) => (
+                                <div key={i} style={{ padding: '16px 0', borderBottom: '1px solid #f1f5f9', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f8fafc', color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                                        {item.avatar ? <img src={item.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : item.icon}
+                                    </div>
+                                    <div style={{ flex: 1, fontSize: '0.9rem' }}>
+                                        <div style={{ fontWeight: '700', color: '#334155', lineHeight: '1.4' }}>{item.title}</div>
+                                        {(item.sub || item.highlight) && (
+                                            <div style={{ marginTop: '4px', fontSize: '0.85rem', color: '#64748b' }}>
+                                                {item.sub} {item.highlight && <span style={{ color: '#c2410c', fontWeight: '700' }}>{item.highlight}</span>}
+                                                {item.badge && <span style={{ marginLeft: '8px', padding: '2px 8px', borderRadius: '4px', background: '#fff7ed', color: '#c2410c', fontSize: '0.7rem', fontWeight: '800', border: '1px solid #ffedd5' }}>{item.badge}</span>}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </DashboardCard>
                 </div>
+
+                {/* Row 2: Fixed Direct Reports Row */}
+                <div className="direct-reports-fixed">
+                    <DashboardCard id="direct-reports" title={`Direct Reports (${stats.direct_reports?.length || 0})`} icon={IconDirectReports} hideActions>
+                        <div style={{ display: 'flex', gap: '48px', padding: '10px 20px', overflowX: 'auto' }}>
+                            {[
+                                { name: 'Maja Andev', avatar: 'https://i.pravatar.cc/150?u=maja' },
+                                { name: 'Eric Asture', avatar: 'https://i.pravatar.cc/150?u=eric' },
+                                { name: 'Cheryl Barnet', avatar: 'https://i.pravatar.cc/150?u=cheryl' },
+                                { name: 'Jake Bryan', avatar: 'https://i.pravatar.cc/150?u=jake' }
+                            ].map((person, i) => (
+                                <div key={i} className="report-item" style={{ textAlign: 'center', minWidth: '100px' }}>
+                                    <div className="report-avatar-container">
+                                        <img src={person.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={person.name} />
+                                    </div>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#334155' }}>{person.name}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </DashboardCard>
+                </div>
+
+                {/* Row 3: Celebrations, Welcome, Trainings */}
+                {(() => {
+                    const row2Ids = ['celebrations', 'welcome', 'trainings'];
+                    const expandedIndex = row2Ids.indexOf(expandedCard);
+                    return (
+                        <div
+                            className={`dashboard-row ${expandedIndex !== -1 ? 'has-expanded' : ''}`}
+                            data-expanded-index={expandedIndex !== -1 ? expandedIndex : undefined}
+                            data-count="3"
+                        >
+                            <DashboardCard index={0} id="celebrations" title="Celebrations" icon={IconParty} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                    {stats.celebrations?.slice(0, 3).map((celeb, i) => (
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <img src={celeb.avatar} style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'cover' }} alt={celeb.name} />
+                                            <div>
+                                                <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>{celeb.name}</div>
+                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{celeb.date}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </DashboardCard>
+
+                            <DashboardCard index={1} id="welcome" title="Welcome" icon={IconUserPlus} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                    <div style={{ width: '48px', height: '48px', background: 'rgba(92, 184, 92, 0.1)', color: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}><IconUserPlus /></div>
+                                    <h3 className="font-heading" style={{ fontSize: '1rem', fontWeight: '700' }}>{stats.new_hires?.length} New Hires</h3>
+                                </div>
+                            </DashboardCard>
+
+                            <DashboardCard index={2} id="trainings" title="Trainings" icon={IconGraduation} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {stats.trainings?.slice(0, 2).map((training, i) => (
+                                        <div key={i} style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.85rem' }}>
+                                            <div style={{ fontWeight: '700' }}>{training.title}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </DashboardCard>
+                        </div>
+                    );
+                })()}
+
+                {/* Row 3: Links, Onboarding, Time Off Requests */}
+                {(() => {
+                    const row3Ids = ['company-links', 'onboarding', 'time-off-requests'];
+                    const expandedIndex = row3Ids.indexOf(expandedCard);
+                    return (
+                        <div
+                            className={`dashboard-row ${expandedIndex !== -1 ? 'has-expanded' : ''}`}
+                            data-expanded-index={expandedIndex !== -1 ? expandedIndex : undefined}
+                            data-count="3"
+                        >
+                            <DashboardCard index={0} id="company-links" title="Links" icon={IconLink} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    {stats.company_links?.[0]?.links.map(link => (
+                                        <div key={link} style={{ fontSize: '0.9rem', color: '#64748b' }}>{link}</div>
+                                    ))}
+                                </div>
+                            </DashboardCard>
+
+                            <DashboardCard index={1} id="onboarding" title="Onboarding" icon={IconBadge} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {stats.onboarding?.map((item, i) => (
+                                        <div key={i} style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: '8px' }}>
+                                            <div style={{ fontWeight: '700', fontSize: '0.85rem' }}>{item.date}</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{item.on_track} on track</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </DashboardCard>
+
+                            <DashboardCard index={2} id="time-off-requests" title="Time Off Requests" icon={IconCalendarClock} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', padding: '10px 0' }}>
+                                    {/* Urgent Section */}
+                                    <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', color: '#71717a' }}>
+                                            <IconAlarm size={48} />
+                                            <span style={{ fontSize: '3.2rem', fontWeight: '700', fontFamily: 'inherit' }}>5</span>
+                                        </div>
+                                        <div style={{ fontSize: '1.1rem', fontWeight: '600', color: '#71717a', marginTop: '2px' }}>Urgent Requests</div>
+                                    </div>
+
+                                    {/* Separator */}
+                                    <div style={{ borderTop: '1px solid #e4e4e7', width: '90%', margin: '15px auto' }}></div>
+
+                                    {/* Other Section */}
+                                    <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', color: '#71717a' }}>
+                                            <IconCalendarClock size={42} />
+                                            <span style={{ fontSize: '3.2rem', fontWeight: '700', fontFamily: 'inherit' }}>2</span>
+                                        </div>
+                                        <div style={{ fontSize: '1.1rem', fontWeight: '600', color: '#71717a', marginTop: '2px' }}>Other Requests</div>
+                                    </div>
+                                </div>
+                            </DashboardCard>
+                        </div>
+                    );
+                })()}
+
             </div>
 
             <TimeOffCalculatorModal isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} userName={stats.user.name} jobTitle={stats.user.job_title} />
@@ -878,10 +1091,12 @@ const EmployeeProfile = () => {
 };
 
 const App = () => {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
     return (
         <Router>
-            <div className="app-container">
-                <Sidebar />
+            <div className={`app-container ${isCollapsed ? 'collapsed-sidebar' : ''}`}>
+                <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
                 <div className="main-content">
                     <Header />
                     <div className="content-container">

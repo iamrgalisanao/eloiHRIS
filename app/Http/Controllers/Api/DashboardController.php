@@ -58,6 +58,27 @@ class DashboardController extends Controller
                 ['title' => 'New Expense Policy Updated', 'date' => '2026-01-25'],
             ],
             'pending_requests' => TimeOffRequest::where('status', 'pending')->count(),
+            'celebrations' => [
+                ['name' => 'Daniel Vance', 'type' => 'Birthday', 'date' => 'February 27', 'avatar' => 'https://i.pravatar.cc/150?u=daniel'],
+                ['name' => 'Angela Martin', 'type' => 'Work Anniversary', 'date' => 'February 15', 'avatar' => 'https://i.pravatar.cc/150?u=angela'],
+            ],
+            'new_hires' => [
+                ['name' => 'Jim Halpert', 'start_date' => 'Saturday, Jan 17', 'avatar' => 'https://i.pravatar.cc/150?u=jim'],
+            ],
+            'trainings' => [
+                ['title' => 'Annual Security Training', 'count' => 87],
+                ['title' => 'HR Advantage Package', 'count' => 87],
+                ['title' => 'Compliance 101', 'count' => 45],
+            ],
+            'onboarding' => [
+                ['date' => 'Wednesday, Feb 4', 'overdue' => 0, 'on_track' => 1],
+                ['date' => 'Friday, Feb 13', 'overdue' => 0, 'on_track' => 1],
+            ],
+            'company_links' => [
+                ['category' => 'Company', 'links' => ['Company website']],
+                ['category' => 'Benefits', 'links' => ['401k', 'Health', 'Vision', 'Dental']],
+                ['category' => 'COVID-19', 'links' => []],
+            ]
         ]);
     }
 }

@@ -1,55 +1,26 @@
 import React, { useState } from 'react';
 
-const TimeOffRequestModal = ({ isOpen, onClose, onRefresh }) => {
+const IconCalendar = ({ size = 18 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
+    </svg>
+);
+
+const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
     const [formData, setFormData] = useState({
         leave_type: 'Vacation',
         start_date: '',
         end_date: '',
+        amount: '',
         note: ''
     });
-    const [dayBreakdown, setDayBreakdown] = useState([]); // Array of { date, hours }
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    React.useEffect(() => {
-        if (formData.start_date && formData.end_date) {
-            const start = new Date(formData.start_date);
-            const end = new Date(formData.end_date);
-            const breakdown = [];
-
-            let current = new Date(start);
-            while (current <= end) {
-                // Skip weekends for default (Optional, but usually better for HRIS)
-                const day = current.getDay();
-                const isWeekend = (day === 6 || day === 0);
-
-                breakdown.push({
-                    dateString: current.toDateString(),
-                    dateISO: current.toISOString().split('T')[0],
-                    hours: isWeekend ? 0 : 8
-                });
-                current.setDate(current.getDate() + 1);
-            }
-            setDayBreakdown(breakdown);
-        }
-    }, [formData.start_date, formData.end_date]);
-
     if (!isOpen) return null;
-
-    const totalHours = dayBreakdown.reduce((sum, day) => sum + parseFloat(day.hours || 0), 0);
-
-    const handleHourChange = (index, value) => {
-        const newBreakdown = [...dayBreakdown];
-        newBreakdown[index].hours = value;
-        setDayBreakdown(newBreakdown);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (totalHours === 0) {
-            setError("Total hours must be greater than 0");
-            return;
-        }
         setLoading(true);
         setError(null);
 
@@ -62,8 +33,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh }) => {
             },
             body: JSON.stringify({
                 ...formData,
-                total_hours: totalHours,
-                breakdown: dayBreakdown // Sending breakdown metadata too
+                total_hours: formData.amount,
             })
         })
             .then(async res => {
@@ -84,104 +54,163 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh }) => {
     return (
         <div className="modal-overlay" style={{
             position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-            background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000
+            background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000
         }}>
-            <div className="modal-content glass-panel" style={{
-                background: '#fff', padding: '40px', borderRadius: '24px', width: '450px',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.1)'
+            <div className="modal-content" style={{
+                background: '#fff', borderRadius: '24px', width: '750px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+                overflow: 'hidden', animation: 'modalSlideUp 0.3s ease-out'
             }}>
-                <h2 className="font-heading" style={{ marginBottom: '24px' }}>Request Time Off</h2>
-
-                {error && <div style={{ color: 'red', marginBottom: '16px', fontSize: '0.9rem' }}>{error}</div>}
+                {/* Header */}
+                <div style={{
+                    padding: '24px 32px', borderBottom: '1px solid #f1f5f9',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                }}>
+                    <h2 className="font-heading" style={{ color: '#2d4a22', margin: 0, fontSize: '1.75rem', fontWeight: '700' }}>Record Time Off</h2>
+                    <button onClick={onClose} style={{
+                        width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0',
+                        background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', color: '#64748b', transition: 'all 0.2s'
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                    </button>
+                </div>
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px' }}>Leave Type</label>
-                        <select
-                            className="glass-input"
-                            style={{ width: '100%' }}
-                            value={formData.leave_type}
-                            onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
-                        >
-                            <option>Vacation</option>
-                            <option>Sick Leave</option>
-                        </select>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px' }}>Start Date</label>
-                            <input
-                                type="date"
-                                className="glass-input"
-                                style={{ width: '100%' }}
-                                value={formData.start_date}
-                                onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px' }}>End Date</label>
-                            <input
-                                type="date"
-                                className="glass-input"
-                                style={{ width: '100%' }}
-                                value={formData.end_date}
-                                onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '12px' }}>Amount</label>
-                        <div style={{ border: '1px solid var(--border-light)', borderRadius: '16px', overflow: 'hidden' }}>
-                            {dayBreakdown.map((day, index) => (
-                                <div key={index} style={{
-                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    padding: '12px 16px', borderBottom: index < dayBreakdown.length - 1 ? '1px solid var(--border-light)' : 'none',
-                                    background: day.hours === 0 ? 'rgba(0,0,0,0.02)' : 'transparent'
-                                }}>
-                                    <span style={{ fontSize: '0.9rem', color: day.hours === 0 ? 'var(--text-muted)' : 'var(--text-main)' }}>
-                                        {day.dateString.split(' ').slice(0, 3).join(', ')}
-                                    </span>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <input
-                                            type="number"
-                                            className="glass-input"
-                                            style={{ width: '60px', padding: '6px 10px', textAlign: 'center' }}
-                                            value={day.hours}
-                                            onChange={(e) => handleHourChange(index, e.target.value)}
-                                        />
-                                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>hours</span>
-                                    </div>
+                    <div style={{ padding: '32px' }}>
+                        {/* User Profile Info */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+                            <div style={{
+                                width: '64px', height: '64px', borderRadius: '12px', background: '#94a3b8',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
+                            }}>
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b', lineHeight: '1.2' }}>
+                                    {employee?.name || 'mel galisanao'}
                                 </div>
-                            ))}
-                            <div style={{ padding: '16px', background: 'rgba(92, 184, 92, 0.05)', fontWeight: '700', display: 'flex', justifyContent: 'space-between' }}>
-                                <span>Total:</span>
-                                <span>{totalHours.toFixed(2)} hours</span>
+                                <div style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
+                                    {employee?.job_title || 'Sr. HR Administrator'}
+                                </div>
                             </div>
                         </div>
+
+                        {error && <div style={{ color: '#dc2626', background: '#fef2f2', padding: '12px', borderRadius: '12px', marginBottom: '20px', fontSize: '0.9rem', border: '1px solid #fee2e2' }}>{error}</div>}
+
+                        {/* Date Selection */}
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '12px', marginBottom: '24px' }}>
+                            <div style={{ flex: 1 }}>
+                                <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>From*</label>
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="date"
+                                        style={{
+                                            width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                            fontSize: '1rem', outline: 'none', color: '#1e293b'
+                                        }}
+                                        value={formData.start_date}
+                                        onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                                        required
+                                    />
+                                    <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
+                                        <IconCalendar size={18} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ color: '#cbd5e1', fontSize: '1.5rem', marginBottom: '10px' }}>–</div>
+
+                            <div style={{ flex: 1 }}>
+                                <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>To*</label>
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="date"
+                                        style={{
+                                            width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                            fontSize: '1rem', outline: 'none', color: '#1e293b'
+                                        }}
+                                        value={formData.end_date}
+                                        onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                                        required
+                                    />
+                                    <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
+                                        <IconCalendar size={18} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Category Selection */}
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Time Off Category*</label>
+                            <select
+                                style={{
+                                    width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                    fontSize: '1rem', outline: 'none', color: '#1e293b', appearance: 'none',
+                                    background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
+                                }}
+                                value={formData.leave_type}
+                                onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
+                            >
+                                <option>Vacation</option>
+                                <option>Sick Leave</option>
+                                <option>Bereavement</option>
+                                <option>FMLA</option>
+                            </select>
+                        </div>
+
+                        {/* Amount Input */}
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Amount*</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <input
+                                    type="number"
+                                    placeholder="0"
+                                    style={{
+                                        width: '120px', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                        fontSize: '1rem', outline: 'none', color: '#1e293b', background: '#f8fafc'
+                                    }}
+                                    value={formData.amount}
+                                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                                    required
+                                />
+                                <span style={{ fontSize: '1rem', color: '#64748b' }}>hours</span>
+                            </div>
+                        </div>
+
+                        {/* Note area */}
+                        <div style={{ marginBottom: '8px' }}>
+                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Note</label>
+                            <textarea
+                                style={{
+                                    width: '100%', minHeight: '120px', padding: '16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                    fontSize: '1rem', outline: 'none', color: '#1e293b', resize: 'vertical'
+                                }}
+                                value={formData.note}
+                                onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                            />
+                        </div>
                     </div>
 
-                    <div style={{ marginBottom: '32px' }}>
-                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px' }}>Note</label>
-                        <textarea
-                            className="glass-input"
-                            style={{ width: '100%', minHeight: '80px', resize: 'vertical' }}
-                            value={formData.note}
-                            onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                        />
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                    {/* Footer */}
+                    <div style={{
+                        padding: '24px 32px', background: '#f8fafc', display: 'flex',
+                        justifyContent: 'flex-end', alignItems: 'center', gap: '16px',
+                        borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px'
+                    }}>
                         <button type="button" onClick={onClose} style={{
-                            padding: '12px 24px', borderRadius: '12px', border: '1px solid #ddd',
-                            background: '#fff', cursor: 'pointer', fontWeight: '600'
+                            padding: '10px 20px', border: 'none', background: 'transparent',
+                            color: '#2563eb', fontWeight: '700', fontSize: '1rem', cursor: 'pointer'
                         }}>Cancel</button>
-                        <button type="submit" className="btn-primary" disabled={loading}>
-                            {loading ? 'Submitting...' : 'Submit Request'}
+                        <button type="submit" disabled={loading} style={{
+                            padding: '12px 40px', borderRadius: '30px', border: 'none',
+                            background: '#2d4a22', color: '#fff', fontWeight: '700', fontSize: '1rem',
+                            cursor: 'pointer', transition: 'all 0.2s',
+                            boxShadow: '0 4px 12px rgba(45, 74, 34, 0.2)'
+                        }}>
+                            {loading ? 'Saving...' : 'Save'}
                         </button>
                     </div>
                 </form>

@@ -2,18 +2,41 @@ import React, { useState } from 'react';
 
 const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
     const [category, setCategory] = useState('Vacation');
-    const [asOfDate, setAsOfDate] = useState('2026-01-26');
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     if (!isOpen) return null;
 
-    const accrualData = [
-        { date: '01/21/2026', action: 'Accrual for 01/07/2026 to 01/20/2026', hours: '6.00', balance: '29.65' },
-        { date: '01/17/2026', action: 'Balance adjusted', hours: '50.00', balance: '23.65' },
-        { date: '01/14/2026', action: 'Time off used for 01/14/2026 to 01/15/2026', hours: '-24.00', balance: '-26.35' },
-        { date: '01/13/2026', action: 'Time off used for 01/13/2026 to 01/17/2026', hours: '-32.00', balance: '-2.35' },
-        { date: '01/07/2026', action: 'Accrual for 12/22/2025 to 01/06/2026', hours: '6.00', balance: '29.65' },
-    ];
+    // Simulation settings
+    const currentBalance = 29.65;
+    const accrualRate = 6.00; // 6 hours bi-weekly
+    const lastAccrualDate = new Date('2026-01-07');
+
+    // Calculation Logic
+    const targetDate = new Date(asOfDate);
+    const today = new Date();
+    const isFuture = targetDate > today;
+
+    const accrualDetails = [];
+    let projectedBalance = currentBalance;
+
+    if (isFuture) {
+        let iterDate = new Date(lastAccrualDate);
+        iterDate.setDate(iterDate.getDate() + 14);
+
+        while (iterDate <= targetDate) {
+            projectedBalance += accrualRate;
+            accrualDetails.push({
+                date: iterDate.toLocaleDateString(),
+                action: `Scheduled Accrual`,
+                hours: `+${accrualRate.toFixed(2)}`,
+                balance: projectedBalance.toFixed(2)
+            });
+            iterDate.setDate(iterDate.getDate() + 14);
+        }
+    }
+
+    const displayDetails = [...accrualDetails].reverse();
 
     return (
         <div className="modal-overlay" style={{
@@ -22,108 +45,141 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000
         }}>
             <div className="modal-content" style={{
-                background: '#fff', borderRadius: '16px', width: '700px', maxWidth: '95%',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', overflow: 'hidden'
+                background: '#fff', borderRadius: '24px', width: '750px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+                overflow: 'hidden', animation: 'modalSlideUp 0.3s ease-out'
             }}>
                 {/* Header */}
-                <div style={{ padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9' }}>
-                    <h2 className="font-heading" style={{ margin: 0, color: '#2d4a22', fontSize: '1.5rem', fontWeight: '700' }}>Calculate Time Off</h2>
+                <div style={{
+                    padding: '24px 32px', borderBottom: '1px solid #f1f5f9',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                }}>
+                    <h2 className="font-heading" style={{ color: '#2d4a22', margin: 0, fontSize: '1.75rem', fontWeight: '700' }}>Calculate Time Off</h2>
                     <button onClick={onClose} style={{
-                        border: '1px solid #e2e8f0', background: '#fff', borderRadius: '50%', width: '32px', height: '32px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b'
-                    }}>✕</button>
+                        width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0',
+                        background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', color: '#64748b'
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                    </button>
                 </div>
 
                 <div style={{ padding: '32px' }}>
-                    {/* User Info */}
+                    {/* User Profile Info */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
                         <div style={{
-                            width: '56px', height: '56px', borderRadius: '12px', background: '#94a3b8',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '1.5rem'
-                        }}>👤</div>
+                            width: '64px', height: '64px', borderRadius: '12px', background: '#94a3b8',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
+                        }}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        </div>
                         <div>
-                            <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1e293b' }}>{userName}</div>
-                            <div style={{ color: '#64748b', fontSize: '0.9rem' }}>{jobTitle}</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b', lineHeight: '1.2' }}>
+                                {userName || 'mel galisanao'}
+                            </div>
+                            <div style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
+                                {jobTitle || 'Sr. HR Administrator'}
+                            </div>
                         </div>
                     </div>
 
                     <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '32px' }}></div>
 
-                    {/* Form Controls */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#475569', marginBottom: '8px' }}>Time Off Category</label>
-                            <select
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                style={{
-                                    width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid #e2e8f0',
-                                    outline: 'none', appearance: 'none', background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E") no-repeat right 16px center/16px'
-                                }}
-                            >
-                                <option>Vacation</option>
-                                <option>Sick</option>
-                            </select>
+                    {/* Simulation Controls */}
+                    <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Time Off Category</label>
+                            <div style={{ position: 'relative' }}>
+                                <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    style={{
+                                        width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                        outline: 'none', appearance: 'none', background: '#fff', fontSize: '1rem', color: '#1e293b',
+                                        background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
+                                    }}
+                                >
+                                    <option>Vacation</option>
+                                    <option>Sick Leave</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#475569', marginBottom: '8px' }}>As of Date*</label>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>As of Date*</label>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="date"
                                     value={asOfDate}
                                     onChange={(e) => setAsOfDate(e.target.value)}
                                     style={{
-                                        width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid #e2e8f0',
-                                        outline: 'none'
+                                        width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                        outline: 'none', fontSize: '1rem', color: '#1e293b'
                                     }}
                                 />
+                                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Balance Banner */}
+                    {/* Result Banner */}
                     <div style={{
-                        padding: '24px 32px', borderRadius: '12px', border: '1px solid #e2e8f0',
-                        display: 'flex', alignItems: 'center', marginBottom: '32px'
+                        padding: '40px 32px', borderRadius: '16px', border: '1px solid #e2e8f0',
+                        background: '#fff', marginBottom: '32px'
                     }}>
-                        <span className="font-heading" style={{ fontSize: '2.5rem', fontWeight: '700', color: '#2d4a22' }}>
-                            29.65 hours
-                        </span>
+                        <div className="font-heading" style={{ fontSize: '3.6rem', fontWeight: '800', color: '#2d4a22', letterSpacing: '-2px', lineHeight: '1' }}>
+                            {projectedBalance.toFixed(2)} <span style={{ fontSize: '2.5rem' }}>hours</span>
+                        </div>
                     </div>
 
-                    {/* Accrual Details Accordion */}
-                    <button
+                    {/* Detail Table */}
+                    <div
                         onClick={() => setIsExpanded(!isExpanded)}
                         style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', border: '1px solid #2d4a22',
-                            color: '#2d4a22', padding: '6px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: '600',
-                            fontSize: '0.85rem', marginBottom: '16px'
+                            display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b',
+                            cursor: 'pointer', fontWeight: '600', fontSize: '1rem', marginBottom: '20px',
+                            userSelect: 'none'
                         }}
                     >
-                        <span style={{ transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.2s' }}>▼</span>
+                        <div style={{
+                            width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s'
+                        }}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                        </div>
                         Accrual Details
-                    </button>
+                    </div>
 
                     {isExpanded && (
-                        <div style={{ border: '1px solid #f1f5f9', borderRadius: '12px', overflow: 'hidden' }}>
+                        <div style={{
+                            maxHeight: '260px', overflowY: 'auto', border: '1px solid #f1f5f9',
+                            borderRadius: '12px', background: '#fff'
+                        }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-                                <thead style={{ background: '#f8fafc', color: '#64748b' }}>
+                                <thead style={{ background: '#f8fafc', color: '#64748b', position: 'sticky', top: 0, zIndex: 10 }}>
                                     <tr>
-                                        <th style={{ padding: '12px 16px', fontWeight: '600' }}>Date ↓</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: '600' }}>Action</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: '600', textAlign: 'right' }}>Hours</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: '600', textAlign: 'right' }}>Balance</th>
+                                        <th style={{ padding: '12px 20px', fontWeight: '700' }}>Date</th>
+                                        <th style={{ padding: '12px 20px', fontWeight: '700' }}>Description</th>
+                                        <th style={{ padding: '12px 20px', fontWeight: '700', textAlign: 'right' }}>Hours</th>
+                                        <th style={{ padding: '12px 20px', fontWeight: '700', textAlign: 'right' }}>Balance</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {accrualData.map((row, i) => (
+                                    {displayDetails.length > 0 ? displayDetails.map((row, i) => (
                                         <tr key={i} style={{ borderTop: '1px solid #f1f5f9' }}>
-                                            <td style={{ padding: '14px 16px', color: '#1e293b' }}>{row.date}</td>
-                                            <td style={{ padding: '14px 16px', color: '#475569' }}>{row.action}</td>
-                                            <td style={{ padding: '14px 16px', textAlign: 'right', color: '#1e293b' }}>{row.hours}</td>
-                                            <td style={{ padding: '14px 16px', textAlign: 'right', color: '#1e293b', fontWeight: '600' }}>{row.balance}</td>
+                                            <td style={{ padding: '16px 20px', color: '#1e293b', fontWeight: '600' }}>{row.date}</td>
+                                            <td style={{ padding: '16px 20px', color: '#64748b' }}>{row.action}</td>
+                                            <td style={{ padding: '16px 20px', textAlign: 'right', color: '#059669', fontWeight: '700' }}>{row.hours}</td>
+                                            <td style={{ padding: '16px 20px', textAlign: 'right', color: '#1e293b', fontWeight: '700' }}>{row.balance}</td>
                                         </tr>
-                                    ))}
+                                    )) : (
+                                        <tr>
+                                            <td colSpan="4" style={{ padding: '32px', textAlign: 'center', color: '#94a3b8', fontStyle: 'italic' }}>
+                                                No projected changes before this date.
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -131,10 +187,14 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
                 </div>
 
                 {/* Footer */}
-                <div style={{ padding: '24px 32px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end' }}>
+                <div style={{
+                    padding: '24px 32px', background: '#f8fafc', display: 'flex',
+                    justifyContent: 'flex-end', borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px'
+                }}>
                     <button onClick={onClose} style={{
-                        background: '#2d4a22', color: '#fff', border: 'none', padding: '10px 32px',
-                        borderRadius: '24px', fontWeight: '700', cursor: 'pointer'
+                        padding: '12px 48px', borderRadius: '30px', border: 'none',
+                        background: '#2d4a22', color: '#fff', fontWeight: '700', fontSize: '1rem',
+                        cursor: 'pointer', transition: 'all 0.2s'
                     }}>
                         Close
                     </button>

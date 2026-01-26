@@ -41,4 +41,24 @@ class Employee extends Model
     {
         return $this->hasMany(CustomFieldValue::class);
     }
+
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
+    }
+
+    public function trainings()
+    {
+        return $this->hasMany(Training::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    public function directReports()
+    {
+        return $this->hasMany(Employee::class, 'reports_to_id');
+    }
 }

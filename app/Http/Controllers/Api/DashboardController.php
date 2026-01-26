@@ -12,8 +12,15 @@ class DashboardController extends Controller
 {
     public function stats()
     {
+        $org = DB::table('organizations')->first();
+        if (!$org)
+            return response()->json(['error' => 'No organization found'], 404);
+
+        $currentUser = Employee::with('user', 'jobInfo')->where('employee_number', 'EMP450')->first();
+        if (!$currentUser)
+            return response()->json(['error' => 'User not found'], 404);
+
         $headcount = Employee::count();
-        $userEmp = Employee::with('user', 'jobInfo')->find(1); // Mocked logged-in user
 
         $deptBreakdown = DB::table('job_info')
             ->select('department', DB::raw('count(*) as count'))
@@ -35,29 +42,69 @@ class DashboardController extends Controller
             });
 
         $personalBalances = DB::table('time_off_balances')
-            ->where('employee_id', 1)
+            ->where('employee_id', $currentUser->id)
             ->get();
+
+        // --- Fetch Real Activities ---
+        $activities = \App\Models\Activity::where('employee_id', $currentUser->id)
+            ->orWhereNull('employee_id')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get()
+            ->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'sub' => $act->description,
+                    'type' => $act->type,
+                    'badge' => $act->metadata['badge'] ?? null,
+                    'highlight' => $act->metadata['highlight'] ?? null,
+                    'icon' => $act->metadata['icon'] ?? null,
+                    'avatar' => $act->metadata['avatar'] ?? null,
+                ];
+            });
+
+        // --- Fetch Real My Stuff (Goals & Trainings) ---
+        $goals = \App\Models\Goal::where('employee_id', $currentUser->id)->get();
+        $trainings = \App\Models\Training::where('employee_id', $currentUser->id)->get();
+
+        $myStuff = [
+            'goals' => [
+                'count' => $goals->count(),
+                'active' => $goals->where('status', 'active')->count(),
+                'soonest_due' => $goals->where('status', 'active')->min('due_date'),
+            ],
+            'trainings' => [
+                'count' => $trainings->count(),
+                'active' => $trainings->where('status', 'active')->count(),
+                'past_due' => $trainings->where('status', 'past due')->count(),
+            ]
+        ];
+
+        // --- Fetch Real Direct Reports ---
+        $directReports = Employee::with(['user', 'jobInfo'])
+            ->where('reports_to_id', $currentUser->id)
+            ->get()
+            ->map(function ($emp) {
+                return [
+                    'name' => $emp->user->name,
+                    'job_title' => $emp->jobInfo->job_title ?? 'Employee',
+                    'avatar' => "https://i.pravatar.cc/150?u=" . urlencode($emp->user->name)
+                ];
+            });
 
         return response()->json([
             'user' => [
-                'name' => $userEmp->user->name,
-                'job_title' => $userEmp->jobInfo->job_title ?? 'Employee',
-                'department' => $userEmp->jobInfo->department ?? 'General'
+                'name' => $currentUser->user->name,
+                'job_title' => $currentUser->jobInfo->job_title ?? 'Employee',
+                'department' => $currentUser->jobInfo->department ?? 'General'
             ],
             'headcount' => $headcount,
             'departments' => $deptBreakdown,
             'upcoming_time_off' => $upcomingTimeOff,
             'personal_balances' => $personalBalances,
-            'tasks' => [
-                ['id' => 1, 'title' => 'Approve Pam\'s Vacation Request', 'type' => 'approval'],
-                ['id' => 2, 'title' => 'Complete Performance Review for Dwight', 'type' => 'task'],
-                ['id' => 3, 'title' => 'Upload updated Health Insurance forms', 'type' => 'document'],
-            ],
-            'announcements' => [
-                ['title' => 'Scranton Chili Cook-off this Friday!', 'date' => '2026-01-30'],
-                ['title' => 'New Expense Policy Updated', 'date' => '2026-01-25'],
-            ],
-            'pending_requests' => TimeOffRequest::where('status', 'pending')->count(),
+            'activities' => $activities,
+            'my_stuff' => $myStuff,
+            'direct_reports' => $directReports,
             'celebrations' => [
                 ['name' => 'Daniel Vance', 'type' => 'Birthday', 'date' => 'February 27', 'avatar' => 'https://i.pravatar.cc/150?u=daniel'],
                 ['name' => 'Angela Martin', 'type' => 'Work Anniversary', 'date' => 'February 15', 'avatar' => 'https://i.pravatar.cc/150?u=angela'],
@@ -65,19 +112,17 @@ class DashboardController extends Controller
             'new_hires' => [
                 ['name' => 'Jim Halpert', 'start_date' => 'Saturday, Jan 17', 'avatar' => 'https://i.pravatar.cc/150?u=jim'],
             ],
-            'trainings' => [
-                ['title' => 'Annual Security Training', 'count' => 87],
-                ['title' => 'HR Advantage Package', 'count' => 87],
-                ['title' => 'Compliance 101', 'count' => 45],
+            'trainings_summary' => [ // List of training names for the card
+                ['title' => 'Annual Security Training'],
+                ['title' => 'HR Advantage Package'],
             ],
             'onboarding' => [
-                ['date' => 'Wednesday, Feb 4', 'overdue' => 0, 'on_track' => 1],
-                ['date' => 'Friday, Feb 13', 'overdue' => 0, 'on_track' => 1],
+                ['date' => 'Wednesday, Feb 4', 'on_track' => 1],
+                ['date' => 'Friday, Feb 13', 'on_track' => 1],
             ],
             'company_links' => [
                 ['category' => 'Company', 'links' => ['Company website']],
                 ['category' => 'Benefits', 'links' => ['401k', 'Health', 'Vision', 'Dental']],
-                ['category' => 'COVID-19', 'links' => []],
             ]
         ]);
     }

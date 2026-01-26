@@ -13,6 +13,7 @@ class DashboardController extends Controller
     public function stats()
     {
         $headcount = Employee::count();
+        $userEmp = Employee::with('user', 'jobInfo')->find(1); // Mocked logged-in user
 
         $deptBreakdown = DB::table('job_info')
             ->select('department', DB::raw('count(*) as count'))
@@ -33,11 +34,29 @@ class DashboardController extends Controller
                 ];
             });
 
+        $personalBalances = DB::table('time_off_balances')
+            ->where('employee_id', 1)
+            ->get();
+
         return response()->json([
+            'user' => [
+                'name' => $userEmp->user->name,
+                'job_title' => $userEmp->jobInfo->job_title ?? 'Employee',
+                'department' => $userEmp->jobInfo->department ?? 'General'
+            ],
             'headcount' => $headcount,
             'departments' => $deptBreakdown,
             'upcoming_time_off' => $upcomingTimeOff,
-            'new_hires_month' => 1, // Mock
+            'personal_balances' => $personalBalances,
+            'tasks' => [
+                ['id' => 1, 'title' => 'Approve Pam\'s Vacation Request', 'type' => 'approval'],
+                ['id' => 2, 'title' => 'Complete Performance Review for Dwight', 'type' => 'task'],
+                ['id' => 3, 'title' => 'Upload updated Health Insurance forms', 'type' => 'document'],
+            ],
+            'announcements' => [
+                ['title' => 'Scranton Chili Cook-off this Friday!', 'date' => '2026-01-30'],
+                ['title' => 'New Expense Policy Updated', 'date' => '2026-01-25'],
+            ],
             'pending_requests' => TimeOffRequest::where('status', 'pending')->count(),
         ]);
     }

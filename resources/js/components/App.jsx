@@ -1,195 +1,91 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams, Link } from 'react-router-dom';
+import {
+    Pencil, Calendar, Gift, Megaphone, Target, GraduationCap, BarChart3,
+    DollarSign, PartyPopper, UserPlus, Link as LinkIcon, BadgeCheck, Clock,
+    Sliders, Plus, Settings as SettingsIcon, History, ShieldPlus, Palmtree, Briefcase,
+    ChevronLeft, ChevronRight, CalendarPlus, CheckCircle2, CalendarClock,
+    User, Bell, ArrowRight, Check, Search, Menu, X, Info, HelpCircle,
+    UserCheck, Users, Lock, MessageCircle, Building2, Gem, Layout, Mail,
+    Smile, Heart, Globe, Rocket, Banknote, TrendingUp, Timer, Trophy, LayoutGrid, Calculator,
+    Palette, LogOut, AlarmClock, Maximize2, Minimize2
+} from 'lucide-react';
 import Sidebar from './layout/Sidebar';
 import Header from './layout/Header';
 import ProfileHeader from './ProfileHeader';
 import TimeOffRequestModal from './TimeOffRequestModal';
 import TimeOffCalculatorModal from './TimeOffCalculatorModal';
 import AdjustBalanceModal from './AdjustBalanceModal';
+import AccrualStartDateModal from './AccrualStartDateModal';
+import TimeOffSettings from './TimeOffSettings';
 
-// --- Dashboard Icons ---
-const IconPencil = ({ size = 18 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-    </svg>
-);
-const IconCalendar = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>;
-const IconGift = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12" /><rect width="20" height="5" x="2" y="7" /><line x1="12" x2="12" y1="22" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></svg>;
-const IconAnnounce = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>;
-const IconTarget = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>;
-const IconGraduation = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2v-5" /></svg>;
-const IconChart = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>;
-const IconDollar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>;
-const IconParty = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.8 11.3 2 22l10.7-3.8M4 14.8l.7 3.9M13.5 4.4l3 3m-5-2 4 4M15 2l5 5" /><circle cx="17.5" cy="6.5" r="2.5" /></svg>;
-const IconUserPlus = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>;
-const IconLink = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>;
-const IconBadge = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /></svg>;
-const IconClock = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>;
-const IconSliders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" /><line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" /><line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" /><line x1="2" y1="14" x2="6" y2="14" /><line x1="10" y1="8" x2="14" y2="8" /><line x1="18" x2="18" y1="16" y2="16" /></svg>;
-const IconExpand = ({ isExpanded }) => isExpanded ? (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14h6v6" /><path d="m10 14-6 6" /><path d="M20 10h-6V4" /><path d="m14 10 6-6" /></svg>
-) : (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
-);
-const IconDirectReports = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>;
-const IconAlarm = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="14" r="7" />
-        <path d="M12 11v3l2 2" />
-        <path d="m5 4 3-2" />
-        <path d="m19 4-3-2" />
-        <path d="m5 20 2-2" />
-        <path d="m19 20-2-2" />
-    </svg>
-);
-const IconCalendarClock = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" />
-        <path d="M3 10h18" />
-        <path d="M8 2v4" />
-        <path d="M16 2v4" />
-        <circle cx="16" cy="16" r="4" />
-        <path d="M16 14v2h2" />
-    </svg>
-);
-const IconPalm = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8c0 1.1.9 2 2 2" />
-        <path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5 0 1.1-.9 2-2 2" />
-        <path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43" />
-        <path d="M18.11 12.71c2.15 2.15 2.3 5.47.35 7.43" />
-        <path d="M12 11v10" />
-        <path d="M9 21h6" />
-    </svg>
-);
-const IconMegaphone = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m3 11 18-5v12L3 13v-2z" />
-        <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-    </svg>
-);
-const IconCompass = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" />
-    </svg>
-);
-const IconProfile = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-    </svg>
-);
-const IconChevronRight = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m9 18 6-6-6-6" />
-    </svg>
-);
-const IconSignature = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m15 5 4 4" />
-        <path d="M13 7 3.83 16.17a2 2 0 0 0 0 2.83l.83.83" />
-        <path d="m6.33 19.33 1.34 1.34a2 2 0 0 0 2.83 0L19.33 11" />
-        <path d="m6.33 19.33.67-.67" />
-        <path d="m10.5 12.5 1 1" />
-    </svg>
-);
-const IconCheckCircle = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <path d="m9 11 3 3L22 4" />
-    </svg>
-);
-const IconCalculator = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect width="16" height="20" x="4" y="2" rx="2" />
-        <line x1="8" x2="16" y1="6" y2="6" />
-        <line x1="16" x2="16" y1="14" y2="18" />
-        <path d="M16 10h.01" />
-        <path d="M12 10h.01" />
-        <path d="M8 10h.01" />
-        <path d="M12 14h.01" />
-        <path d="M8 14h.01" />
-        <path d="M12 18h.01" />
-        <path d="M8 18h.01" />
-    </svg>
-);
+// --- Icons replaced with Lucide ---
 
-const IconPlus = ({ size = 18 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-);
+const SettingsDropdown = ({ isOpen, onClose, onOpenAccrualModal }) => {
+    if (!isOpen) return null;
 
-const IconSettings = ({ size = 18 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-        <circle cx="12" cy="12" r="3" />
-    </svg>
-);
-
-const IconHistory = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-        <path d="M3 3v5h5" />
-        <path d="M12 7v5l4 2" />
-    </svg>
-);
-
-const IconBandage = ({ size = 24 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="8" width="20" height="8" rx="2" />
-        <rect x="8" y="8" width="8" height="8" />
-        <line x1="11" x2="11.01" y1="11" y2="11" />
-        <line x1="13" x2="13.01" y1="11" y2="11" />
-        <line x1="11" x2="11.01" y1="13" y2="13" />
-        <line x1="13" x2="13.01" y1="13" y2="13" />
-    </svg>
-);
-
-const IconBriefcase = ({ size = 24 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect width="20" height="12" x="2" y="8" rx="2" />
-        <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-        <path d="M2 13h20" />
-    </svg>
-);
-
-const IconFamily = ({ size = 24 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="8" cy="8" r="2.5" />
-        <path d="M4 20v-2a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" />
-        <circle cx="16" cy="11" r="2" />
-        <path d="M12 21v-1.5a2.5 2.5 0 0 1 2.5-2.5h1a2.5 2.5 0 0 1 2.5 2.5V21" />
-    </svg>
-);
-
-const IconChevronLeft = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m15 18-6-6 6-6" />
-    </svg>
-);
-
-const IconCalendarPlus = ({ size = 20 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8" />
-        <path d="M16 2v4M8 2v4M3 10h18" />
-        <path d="M19 16v6M16 19h6" />
-    </svg>
-);
+    return (
+        <div
+            className="glass-panel"
+            style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '8px',
+                width: '280px',
+                background: '#fff',
+                borderRadius: '16px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                zIndex: 1000,
+                overflow: 'hidden',
+                padding: '8px',
+                border: '1px solid #f1f5f9'
+            }}
+        >
+            <div
+                style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
+                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                onClick={() => {
+                    onOpenAccrualModal();
+                    onClose();
+                }}
+            >
+                Accrual Level Start Date: 10/29/2022
+            </div>
+            <div style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
+                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}>
+                Add Time Off Policy
+            </div>
+            <div style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
+                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}>
+                Pause Accruals
+            </div>
+        </div>
+    );
+};
 
 const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpen, setIsModalOpen, onAdjust }) => {
+    const [openDropdown, setOpenDropdown] = useState(null); // 'header' or item index i
+    const [isAccrualModalOpen, setIsAccrualModalOpen] = useState(false);
+
+    const toggleDropdown = (id) => {
+        setOpenDropdown(openDropdown === id ? null : id);
+    };
+
     const balanceItems = [
-        { label: 'Vacation Available', type: 'Vacation', icon: IconPalm, sub: '(8 hours scheduled)', policy: 'Vacation Full-Time' },
-        { label: 'Sick Available', type: 'Sick', icon: IconBandage, sub: 'Sick Full-Time' },
-        { label: 'Bereavement Used (YTD)', type: 'Bereavement', icon: IconBriefcase, unit: 'Days', sub: 'Bereavement Flexible Policy' },
+        { label: 'Vacation Available', type: 'Vacation', icon: Palmtree, sub: '(8 hours scheduled)', policy: 'Vacation Full-Time' },
+        { label: 'Sick Available', type: 'Sick', icon: ShieldPlus, sub: 'Sick Full-Time' },
+        { label: 'Bereavement Used (YTD)', type: 'Bereavement', icon: Briefcase, unit: 'Days', sub: 'Bereavement Flexible Policy' },
     ];
 
     const upcomingLeaves = [
-        { date: 'Feb 14', label: '8 hours of Vacation', icon: IconPalm },
-        { date: 'Feb 15', label: '8 hours of Sick', icon: IconBandage },
-        { date: 'Feb 15 - 16', label: '16 hours of Sick', icon: IconBandage },
-        { date: 'Apr 4 - 5', label: '8 hours of Vacation', icon: IconPalm },
+        { date: 'Feb 14', label: '8 hours of Vacation', icon: Palmtree },
+        { date: 'Feb 15', label: '8 hours of Sick', icon: ShieldPlus },
+        { date: 'Feb 15 - 16', label: '16 hours of Sick', icon: ShieldPlus },
+        { date: 'Apr 4 - 5', label: '8 hours of Vacation', icon: Palmtree },
     ];
 
     const SmallActionBtn = ({ icon: Icon, onClick }) => (
@@ -210,13 +106,27 @@ const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpe
             {/* Module Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2d4a22' }}>
-                    <IconCalendarPlus size={24} />
+                    <CalendarPlus size={24} />
                     <h1 className="font-heading" style={{ fontSize: '1.75rem', fontWeight: '700', margin: 0 }}>Time Off</h1>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div className="glass-panel" style={{ padding: '4px 12px', borderRadius: '24px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer' }}>
-                        <IconSettings size={18} color="#64748b" />
-                        <span style={{ fontSize: '0.6rem' }}>▼</span>
+                    <div style={{ position: 'relative' }}>
+                        <div
+                            className="glass-panel"
+                            onClick={() => toggleDropdown('header')}
+                            style={{
+                                padding: '6px 14px', borderRadius: '24px', display: 'flex', alignItems: 'center', gap: '8px',
+                                border: '1.5px solid #2d4a22', background: '#fff', cursor: 'pointer', color: '#2d4a22'
+                            }}
+                        >
+                            <SettingsIcon size={18} />
+                            <span style={{ fontSize: '0.6rem', transform: openDropdown === 'header' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
+                        </div>
+                        <SettingsDropdown
+                            isOpen={openDropdown === 'header'}
+                            onClose={() => setOpenDropdown(null)}
+                            onOpenAccrualModal={() => setIsAccrualModalOpen(true)}
+                        />
                     </div>
                 </div>
             </div>
@@ -238,13 +148,24 @@ const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpe
 
                             {/* Card Actions */}
                             <div style={{ display: 'flex', gap: '8px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
-                                <SmallActionBtn icon={IconCalendarPlus} onClick={() => setIsModalOpen(true)} />
-                                <SmallActionBtn icon={IconCalculator} onClick={() => setIsCalculatorOpen(true)} />
-                                <SmallActionBtn icon={IconPencil} onClick={() => onAdjust(item.type)} />
+                                <SmallActionBtn icon={CalendarPlus} onClick={() => setIsModalOpen(true)} />
+                                <SmallActionBtn icon={Calculator} onClick={() => setIsCalculatorOpen(true)} />
+                                <SmallActionBtn icon={Pencil} onClick={() => onAdjust(item.type)} />
                                 <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
-                                    <div className="glass-panel" style={{ padding: '4px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer' }}>
-                                        <IconSettings size={14} color="#64748b" />
-                                        <span style={{ fontSize: '0.5rem' }}>▼</span>
+                                    <div style={{ position: 'relative' }}>
+                                        <div
+                                            className="glass-panel"
+                                            onClick={() => toggleDropdown(i)}
+                                            style={{ padding: '4px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer' }}
+                                        >
+                                            <SettingsIcon size={14} color="#64748b" />
+                                            <span style={{ fontSize: '0.5rem', transform: openDropdown === i ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
+                                        </div>
+                                        <SettingsDropdown
+                                            isOpen={openDropdown === i}
+                                            onClose={() => setOpenDropdown(null)}
+                                            onOpenAccrualModal={() => setIsAccrualModalOpen(true)}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -257,14 +178,14 @@ const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpe
                     background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer', color: '#64748b', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                 }}>
-                    <IconChevronRight size={18} />
+                    <ChevronRight size={18} />
                 </button>
-            </div>
+            </div >
 
             {/* Upcoming Section */}
-            <div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', marginBottom: '40px', background: '#fff' }}>
+            < div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', marginBottom: '40px', background: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', color: '#2d4a22' }}>
-                    <IconClock size={20} />
+                    <Clock size={20} />
                     <h3 className="font-heading" style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>Upcoming Time Off</h3>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
@@ -276,19 +197,19 @@ const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpe
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '1.05rem', fontWeight: '700', color: '#1e293b' }}>{leave.date}</div>
                                 <div style={{ fontSize: '0.9rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <IconCheckCircle size={14} color="#5cb85c" /> {leave.label}
+                                    <CheckCircle2 size={14} color="#5cb85c" /> {leave.label}
                                 </div>
                             </div>
                             <button className="glass-panel" style={{ padding: '8px 24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '0.85rem', fontWeight: '600', color: '#1e293b', cursor: 'pointer' }}>Edit</button>
                         </div>
                     ))}
                 </div>
-            </div>
+            </div >
 
             {/* History Section */}
-            <div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', background: '#fff' }}>
+            < div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', background: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', color: '#2d4a22' }}>
-                    <IconHistory size={20} />
+                    <History size={20} />
                     <h3 className="font-heading" style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>History</h3>
                 </div>
 
@@ -332,8 +253,14 @@ const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpe
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </div >
+            <AccrualStartDateModal
+                isOpen={isAccrualModalOpen}
+                onClose={() => setIsAccrualModalOpen(false)}
+                userName={stats?.user?.name}
+                jobTitle={stats?.user?.job_title}
+            />
+        </div >
     );
 };
 
@@ -362,10 +289,10 @@ const DashboardCard = ({ id, index, title, icon: Icon, children, padding = "24px
                 {!hideActions && (
                     <div className="card-actions" style={{ display: 'flex', gap: '8px' }}>
                         <button style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-light)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
-                            <IconSliders />
+                            <Sliders size={18} />
                         </button>
                         <button onClick={toggleExpand} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-light)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
-                            <IconExpand isExpanded={isExpanded} />
+                            {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
                         </button>
                     </div>
                 )}
@@ -375,6 +302,22 @@ const DashboardCard = ({ id, index, title, icon: Icon, children, padding = "24px
             </div>
         </div>
     );
+};
+
+// --- Icon Mapping For Activity Feed ---
+const IconMap = {
+    'Megaphone': Megaphone,
+    'Gift': Gift,
+    'GraduationCap': GraduationCap,
+    'PartyPopper': PartyPopper,
+    'UserPlus': UserPlus,
+    'ShieldPlus': ShieldPlus,
+    'Calendar': Calendar,
+    'Rocket': Rocket,
+    'Trophy': Trophy,
+    'Target': Target,
+    'Bell': Bell,
+    'MessageCircle': MessageCircle
 };
 
 const Home = () => {
@@ -388,12 +331,12 @@ const Home = () => {
     const [timeOffIndex, setTimeOffIndex] = useState(0);
 
     const timeOffCategories = [
-        { label: 'Sick', icon: IconBandage, type: 'Sick', unit: 'hours available' },
-        { label: 'Vacation', icon: IconPalm, type: 'Vacation', unit: 'hours available' },
-        { label: 'Bereavement', icon: IconBriefcase, type: 'Bereavement', unit: 'days used (YTD)', value: '0' },
-        { label: 'COVID-19 Related A...', icon: IconCalendarClock, type: 'COVID-19', unit: 'hours used (YTD)', value: '0' },
-        { label: 'Comp/In Lieu Time', icon: IconBriefcase, type: 'Comp Time', unit: 'hours used (YTD)', value: '0' },
-        { label: 'FMLA', icon: IconFamily, type: 'FMLA', unit: 'hours used (YTD)', value: '0' },
+        { label: 'Sick', icon: ShieldPlus, type: 'Sick', unit: 'hours available' },
+        { label: 'Vacation', icon: Palmtree, type: 'Vacation', unit: 'hours available' },
+        { label: 'Bereavement', icon: Briefcase, type: 'Bereavement', unit: 'days used (YTD)', value: '0' },
+        { label: 'COVID-19 Related A...', icon: CalendarClock, type: 'COVID-19', unit: 'hours used (YTD)', value: '0' },
+        { label: 'Comp/In Lieu Time', icon: Briefcase, type: 'Comp Time', unit: 'hours used (YTD)', value: '0' },
+        { label: 'FMLA', icon: Users, type: 'FMLA', unit: 'hours used (YTD)', value: '0' },
     ];
 
     useEffect(() => {
@@ -441,7 +384,7 @@ const Home = () => {
                         width: '80px', height: '80px', borderRadius: '16px', background: 'var(--primary)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
                     }}>
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        <User size={40} />
                     </div>
                     <div>
                         <h1 className="font-heading" style={{
@@ -462,7 +405,7 @@ const Home = () => {
                         background: '#fff', fontSize: '0.9rem', fontWeight: '600', color: '#1e293b',
                         display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'
                     }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
+                        <Plus size={18} />
                         New... <span style={{ fontSize: '0.7rem', opacity: 0.5 }}>▼</span>
                     </button>
                     <button style={{
@@ -470,7 +413,7 @@ const Home = () => {
                         background: '#fff', fontSize: '0.9rem', fontWeight: '600', color: '#1e293b',
                         display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'
                     }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+                        <LayoutGrid size={18} />
                         Edit
                     </button>
                 </div>
@@ -480,7 +423,7 @@ const Home = () => {
                 {/* Row 1: Fixed Layout Grid (Time Off, My Stuff, Activity) */}
                 <div className="dashboard-fixed-grid">
                     {/* Card: Time Off */}
-                    <DashboardCard id="time-off" title="Time Off" icon={IconCalendar} hideActions padding="0">
+                    <DashboardCard id="time-off" title="Time Off" icon={Calendar} hideActions padding="0">
                         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '24px' }}>
                             {/* Carousel Area - Centered */}
                             <div style={{
@@ -496,7 +439,7 @@ const Home = () => {
                                         cursor: 'pointer', color: '#64748b', zIndex: 2
                                     }}
                                 >
-                                    <IconChevronLeft size={16} />
+                                    <ChevronLeft size={16} />
                                 </button>
 
                                 {/* Main Content */}
@@ -534,7 +477,7 @@ const Home = () => {
                                         cursor: 'pointer', color: '#64748b', zIndex: 2
                                     }}
                                 >
-                                    <IconChevronRight size={16} />
+                                    <ChevronRight size={16} />
                                 </button>
                             </div>
 
@@ -549,7 +492,7 @@ const Home = () => {
                                     }}
                                     onClick={() => setIsModalOpen(true)}
                                 >
-                                    <IconCalendarPlus size={22} />
+                                    <CalendarPlus size={22} />
                                     Request Time Off
                                 </button>
                                 <button
@@ -563,7 +506,7 @@ const Home = () => {
                                         setIsAdjustModalOpen(true);
                                     }}
                                 >
-                                    <IconPencil size={20} />
+                                    <Pencil size={20} />
                                 </button>
                                 <button
                                     style={{
@@ -573,20 +516,20 @@ const Home = () => {
                                     }}
                                     onClick={() => setIsCalculatorOpen(true)}
                                 >
-                                    <IconCalculator size={22} />
+                                    <Calculator size={22} />
                                 </button>
                             </div>
                         </div>
                     </DashboardCard>
 
                     {/* Card: My Stuff */}
-                    <DashboardCard id="my-stuff" title="My Stuff" icon={IconGift} hideActions>
+                    <DashboardCard id="my-stuff" title="My Stuff" icon={Gift} hideActions>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                             {[
-                                { label: 'Goals', sub: `${stats.my_stuff?.goals?.count || 0} goals, active is ${stats.my_stuff?.goals?.active || 0}`, icon: <IconCheckCircle /> },
-                                { label: 'Training', sub: `${stats.my_stuff?.trainings?.count || 0} active trainings, ${stats.my_stuff?.trainings?.past_due || 0} past due`, icon: <IconGraduation /> },
-                                { label: 'Compensation Benchmarks', sub: 'Compare your pay with similar orgs', icon: <IconChart /> },
-                                { label: 'Compensation Planning Worksheets', sub: 'Plan out the right combination of salaries, bonuses, and equity', icon: <IconDollar /> }
+                                { label: 'Goals', sub: `${stats.my_stuff?.goals?.count || 0} goals, active is ${stats.my_stuff?.goals?.active || 0}`, icon: <CheckCircle2 /> },
+                                { label: 'Training', sub: `${stats.my_stuff?.trainings?.count || 0} active trainings, ${stats.my_stuff?.trainings?.past_due || 0} past due`, icon: <GraduationCap /> },
+                                { label: 'Compensation Benchmarks', sub: 'Compare your pay with similar orgs', icon: <BarChart3 /> },
+                                { label: 'Compensation Planning Worksheets', sub: 'Plan out the right combination of salaries, bonuses, and equity', icon: <DollarSign /> }
                             ].map((item, i) => (
                                 <div key={i} style={{ padding: '14px 0', display: 'flex', gap: '16px', alignItems: 'center', borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none' }}>
                                     <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f8fafc', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -602,10 +545,10 @@ const Home = () => {
                     </DashboardCard>
 
                     {/* Card: What's Happening */}
-                    <DashboardCard id="activity" title="What's happening at Eloisoft" icon={IconMegaphone} hideActions>
+                    <DashboardCard id="activity" title="What's happening at Eloisoft" icon={Megaphone} hideActions>
                         <div className="activity-feed" style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                             {(stats.activities || []).map((item, i) => {
-                                const Icon = IconMap[item.icon] || IconMegaphone;
+                                const Icon = IconMap[item.icon] || Megaphone;
                                 return (
                                     <div key={i} style={{ padding: '16px 0', borderBottom: '1px solid #f1f5f9', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                                         <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f8fafc', color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
@@ -629,7 +572,7 @@ const Home = () => {
 
                 {/* Row 2: Fixed Direct Reports Row */}
                 <div className="direct-reports-fixed">
-                    <DashboardCard id="direct-reports" title={`Direct Reports (${stats.direct_reports?.length || 0})`} icon={IconDirectReports} hideActions>
+                    <DashboardCard id="direct-reports" title={`Direct Reports (${stats.direct_reports?.length || 0})`} icon={Users} hideActions>
                         <div style={{ display: 'flex', gap: '48px', padding: '10px 20px', overflowX: 'auto' }}>
                             {(stats.direct_reports || []).map((person, i) => (
                                 <div key={i} className="report-item" style={{ textAlign: 'center', minWidth: '100px' }}>
@@ -653,7 +596,7 @@ const Home = () => {
                             data-expanded-index={expandedIndex !== -1 ? expandedIndex : undefined}
                             data-count="3"
                         >
-                            <DashboardCard index={0} id="celebrations" title="Celebrations" icon={IconParty} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={0} id="celebrations" title="Celebrations" icon={PartyPopper} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {stats.celebrations?.slice(0, 3).map((celeb, i) => (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -667,14 +610,14 @@ const Home = () => {
                                 </div>
                             </DashboardCard>
 
-                            <DashboardCard index={1} id="welcome" title="Welcome" icon={IconUserPlus} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={1} id="welcome" title="Welcome" icon={UserPlus} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                    <div style={{ width: '48px', height: '48px', background: 'rgba(92, 184, 92, 0.1)', color: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}><IconUserPlus /></div>
+                                    <div style={{ width: '48px', height: '48px', background: 'rgba(92, 184, 92, 0.1)', color: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}><UserPlus /></div>
                                     <h3 className="font-heading" style={{ fontSize: '1rem', fontWeight: '700' }}>{stats.new_hires?.length} New Hires</h3>
                                 </div>
                             </DashboardCard>
 
-                            <DashboardCard index={2} id="trainings" title="Trainings" icon={IconGraduation} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={2} id="trainings" title="Trainings" icon={GraduationCap} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {(stats.trainings_summary || []).slice(0, 2).map((training, i) => (
                                         <div key={i} style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.85rem' }}>
@@ -697,7 +640,7 @@ const Home = () => {
                             data-expanded-index={expandedIndex !== -1 ? expandedIndex : undefined}
                             data-count="3"
                         >
-                            <DashboardCard index={0} id="company-links" title="Links" icon={IconLink} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={0} id="company-links" title="Links" icon={LinkIcon} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     {stats.company_links?.[0]?.links.map(link => (
                                         <div key={link} style={{ fontSize: '0.9rem', color: '#64748b' }}>{link}</div>
@@ -705,7 +648,7 @@ const Home = () => {
                                 </div>
                             </DashboardCard>
 
-                            <DashboardCard index={1} id="onboarding" title="Onboarding" icon={IconBadge} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={1} id="onboarding" title="Onboarding" icon={BadgeCheck} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {stats.onboarding?.map((item, i) => (
                                         <div key={i} style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: '8px' }}>
@@ -716,12 +659,12 @@ const Home = () => {
                                 </div>
                             </DashboardCard>
 
-                            <DashboardCard index={2} id="time-off-requests" title="Time Off Requests" icon={IconCalendarClock} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
+                            <DashboardCard index={2} id="time-off-requests" title="Time Off Requests" icon={CalendarClock} expandedCard={expandedCard} setExpandedCard={setExpandedCard}>
                                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', padding: '10px 0' }}>
                                     {/* Urgent Section */}
                                     <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', color: '#71717a' }}>
-                                            <IconAlarm size={48} />
+                                            <AlarmClock size={48} />
                                             <span style={{ fontSize: '3.2rem', fontWeight: '700', fontFamily: 'inherit' }}>5</span>
                                         </div>
                                         <div style={{ fontSize: '1.1rem', fontWeight: '600', color: '#71717a', marginTop: '2px' }}>Urgent Requests</div>
@@ -733,7 +676,7 @@ const Home = () => {
                                     {/* Other Section */}
                                     <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', color: '#71717a' }}>
-                                            <IconCalendarClock size={42} />
+                                            <CalendarClock size={42} />
                                             <span style={{ fontSize: '3.2rem', fontWeight: '700', fontFamily: 'inherit' }}>2</span>
                                         </div>
                                         <div style={{ fontSize: '1.1rem', fontWeight: '600', color: '#71717a', marginTop: '2px' }}>Other Requests</div>
@@ -1047,18 +990,33 @@ const Settings = () => {
     const [loading, setLoading] = useState(true);
 
     const categories = [
-        { icon: '💼', label: 'Account' },
-        { icon: '🔑', label: 'Access Levels' },
-        { icon: '📝', label: 'Employee Fields' },
-        { icon: '✅', label: 'Approvals' },
-        { icon: '📱', label: 'Apps' },
-        { icon: '❓', label: 'Ask BambooHR' },
-        { icon: '💖', label: 'Benefits' },
-        { icon: '📁', label: 'Company Directory' },
-        { icon: '⚖️', label: 'Compensation' },
-        { icon: '⚙️', label: 'Custom Fields & Tables' },
-        { icon: '📧', label: 'Email Alerts' },
-        { icon: '🖼️', label: 'Logo & Color' },
+        { icon: <SettingsIcon size={18} />, label: 'Account' },
+        { icon: <Lock size={18} />, label: 'Access Levels' },
+        { icon: <User size={18} />, label: 'Employee Fields' },
+        { icon: <CheckCircle2 size={18} />, label: 'Approvals' },
+        { icon: <LayoutGrid size={18} />, label: 'Apps' },
+        { icon: <MessageCircle size={18} />, label: 'Ask BambooHR' },
+        { icon: <Gift size={18} />, label: 'Benefits' },
+        { icon: <Building2 size={18} />, label: 'Company Directory' },
+        { icon: <DollarSign size={18} />, label: 'Compensation' },
+        { icon: <Gem size={18} />, label: 'Core Values' },
+        { icon: <Layout size={18} />, label: 'Custom Fields & Tables' },
+        { icon: <Mail size={18} />, label: 'Email Alerts' },
+        { icon: <Users size={18} />, label: 'Employee Community' },
+        { icon: <Smile size={18} />, label: 'Employee Satisfaction' },
+        { icon: <Heart size={18} />, label: 'Employee Wellbeing' },
+        { icon: <Globe size={18} />, label: 'Global Employment' },
+        { icon: <Briefcase size={18} />, label: 'Hiring' },
+        { icon: <Calendar size={18} />, label: 'Holidays' },
+        { icon: <Palette size={18} />, label: 'Logo & Color' },
+        { icon: <LogOut size={18} />, label: 'Offboarding' },
+        { icon: <Rocket size={18} />, label: 'Onboarding' },
+        { icon: <Banknote size={18} />, label: 'Payroll' },
+        { icon: <TrendingUp size={18} />, label: 'Performance' },
+        { icon: <Clock size={18} />, label: 'Time Off' },
+        { icon: <Timer size={18} />, label: 'Time Tracking' },
+        { icon: <Trophy size={18} />, label: 'Total Rewards' },
+        { icon: <GraduationCap size={18} />, label: 'Training' },
     ];
 
     useEffect(() => {
@@ -1171,7 +1129,7 @@ const Settings = () => {
         <div className="settings-container">
             <h1 className="font-heading" style={{ fontSize: '2rem', marginBottom: '32px' }}>Settings</h1>
 
-            <div className="settings-grid-layout" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '32px', alignItems: 'start' }}>
+            <div className="settings-grid-layout" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '32px', alignItems: 'stretch' }}>
                 {/* Settings Sidebar */}
                 <div className="settings-sub-sidebar glass-panel" style={{ padding: '8px', overflow: 'hidden' }}>
                     {categories.map((cat, i) => (
@@ -1195,10 +1153,14 @@ const Settings = () => {
                 </div>
 
                 {/* Main Settings Content */}
-                <div className="settings-main-area glass-panel" style={{ padding: '40px', minHeight: '600px' }}>
-                    {activeSubTab === 'Account' ? renderAccountContent() : (
+                <div className="settings-main-area glass-panel" style={{ padding: '40px', display: 'flex', flexDirection: 'column' }}>
+                    {activeSubTab === 'Account' && renderAccountContent()}
+                    {activeSubTab === 'Time Off' && <TimeOffSettings />}
+                    {activeSubTab !== 'Account' && activeSubTab !== 'Time Off' && (
                         <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
-                            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>⚙️</div>
+                            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+                                <SettingsIcon size={48} strokeWidth={1.5} />
+                            </div>
                             <h3>{activeSubTab} Configuration</h3>
                             <p>Advanced settings for {activeSubTab} are coming soon.</p>
                         </div>

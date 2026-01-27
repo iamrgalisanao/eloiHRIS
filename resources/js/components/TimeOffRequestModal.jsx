@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-
-const IconCalendar = ({ size = 18 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
-);
+import { X, User, Calendar } from 'lucide-react';
 
 const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
     const [formData, setFormData] = useState({
@@ -73,7 +68,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
                         background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: 'pointer', color: '#64748b', transition: 'all 0.2s'
                     }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                        <X size={20} strokeWidth={2.5} />
                     </button>
                 </div>
 
@@ -85,7 +80,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
                                 width: '64px', height: '64px', borderRadius: '12px', background: '#94a3b8',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
                             }}>
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                <User size={32} />
                             </div>
                             <div>
                                 <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b', lineHeight: '1.2' }}>
@@ -115,7 +110,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
                                         required
                                     />
                                     <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
-                                        <IconCalendar size={18} />
+                                        <Calendar size={18} />
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +131,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
                                         required
                                     />
                                     <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
-                                        <IconCalendar size={18} />
+                                        <Calendar size={18} />
                                     </div>
                                 </div>
                             </div>

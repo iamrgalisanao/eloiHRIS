@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X, User } from 'lucide-react';
 
 const AdjustBalanceModal = ({ isOpen, onClose, category, employee, onRefresh }) => {
     const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const AdjustBalanceModal = ({ isOpen, onClose, category, employee, onRefresh }) 
                         background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: 'pointer', color: '#64748b'
                     }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                        <X size={20} strokeWidth={2.5} />
                     </button>
                 </div>
 
@@ -59,7 +60,7 @@ const AdjustBalanceModal = ({ isOpen, onClose, category, employee, onRefresh }) 
                         {/* Employee Info */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                <User size={20} />
                             </div>
                             <div>
                                 <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e293b' }}>{employee?.name}</div>
@@ -91,20 +92,22 @@ const AdjustBalanceModal = ({ isOpen, onClose, category, employee, onRefresh }) 
 
                         <div style={{ marginBottom: '20px' }}>
                             <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Adjustment Type</label>
-                            <select
-                                style={{
-                                    width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
-                                    fontSize: '1rem', outline: 'none', color: '#1e293b', appearance: 'none',
-                                    background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
-                                }}
-                                value={formData.adjustment_type}
-                                onChange={(e) => setFormData({ ...formData, adjustment_type: e.target.value })}
-                            >
-                                <option>Manual Adjustment</option>
-                                <option>Carryover Balance</option>
-                                <option>Policy Change</option>
-                                <option>Other</option>
-                            </select>
+                            <div style={{ position: 'relative' }}>
+                                <select
+                                    style={{
+                                        width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
+                                        fontSize: '1rem', outline: 'none', color: '#1e293b', appearance: 'none',
+                                        background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
+                                    }}
+                                    value={formData.adjustment_type}
+                                    onChange={(e) => setFormData({ ...formData, adjustment_type: e.target.value })}
+                                >
+                                    <option>Manual Adjustment</option>
+                                    <option>Carryover Balance</option>
+                                    <option>Policy Change</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div style={{ marginBottom: '8px' }}>

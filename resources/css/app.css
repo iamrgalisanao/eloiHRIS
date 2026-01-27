@@ -84,13 +84,166 @@ h3,
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
-    margin-bottom: 32px;
+    padding: 0 40px;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: var(--glass-shadow);
+    border-bottom: 1px solid var(--border-light);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-w);
+    z-index: 1100;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-container.collapsed-sidebar .top-header {
+    left: var(--sidebar-collapsed-w);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.company-logo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-circle {
+    width: 34px;
+    height: 34px;
+    background: #8cd18c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(140, 209, 140, 0.3);
+}
+
+.logo-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #8cd18c;
+    letter-spacing: 0.5px;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 320px;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.header-search-input {
+    width: 100%;
+    padding: 10px 16px 10px 42px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.header-search-input:focus {
+    background: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(92, 184, 92, 0.1);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.action-item {
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-decoration: none;
+}
+
+.action-item:hover {
+    color: var(--primary);
+}
+
+.action-item.notification {
+    color: #1e293b;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #449d44;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+.settings-trigger {
+    color: #449d44;
+}
+
+.ask-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1.5px solid #8cd18c;
+    background: #fff;
+    color: #449d44;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ask-button:hover {
+    background: #8cd18c;
+    color: #fff;
+}
+
+.user-avatar-header {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .sidebar-logo {
@@ -222,10 +375,12 @@ h3,
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-w);
-    padding: 24px 40px;
     min-height: 100vh;
+    padding-top: var(--header-h);
     background: radial-gradient(circle at top right, rgba(92, 184, 92, 0.05), transparent 600px);
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 }
 
 .app-container.collapsed-sidebar .main-content {
@@ -233,8 +388,11 @@ h3,
 }
 
 .content-container {
-    max-width: 1400px;
+    max-width: 1600px;
+    width: 100%;
     margin: 0 auto;
+    padding: 32px 28px;
+    flex: 1;
 }
 
 /* Glassmorphism Components */
@@ -694,4 +852,21 @@ h3,
 
 .page-content {
     animation: fadeIn 0.5s ease-out forwards;
+}
+
+.dropdown-item-hover:hover {
+    background: #f8fafc;
+    color: var(--primary) !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }

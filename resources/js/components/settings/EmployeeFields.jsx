@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { listEmployeeFields, createEmployeeField, renameEmployeeField, deleteEmployeeField } from '../../services/employeeFieldService';
 
 const CATEGORIES = [
@@ -20,6 +21,20 @@ export default function EmployeeFields() {
   const [editingLabel, setEditingLabel] = useState('');
 
   const currentCatLabel = useMemo(() => CATEGORIES.find(c => c.key === category)?.label || '', [category]);
+  const filterParamKey = useMemo(() => {
+    switch (category) {
+      case 'department':
+        return 'department';
+      case 'division':
+        return 'division';
+      case 'job_title':
+        return 'job_title';
+      case 'location':
+        return 'location';
+      default:
+        return null; // employment_status, team have no People filter yet
+    }
+  }, [category]);
 
   const refresh = async () => {
     setLoading(true); setError(null);
@@ -127,7 +142,13 @@ export default function EmployeeFields() {
                         )}
                       </td>
                       <td style={{ padding: 12, textAlign: 'right' }}>
-                        {item.people_count}
+                        {filterParamKey ? (
+                          <Link to={`/people?${filterParamKey}=${encodeURIComponent(item.label)}`} className="link-primary">
+                            {item.people_count}
+                          </Link>
+                        ) : (
+                          item.people_count
+                        )}
                       </td>
                       <td style={{ padding: 12, textAlign: 'right', whiteSpace: 'nowrap' }}>
                         {editingId === item.id ? (

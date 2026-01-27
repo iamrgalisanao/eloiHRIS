@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams, Link, useLocation } from 'react-router-dom';
 import {
     Pencil, Calendar, Gift, Megaphone, Target, GraduationCap, BarChart3,
     DollarSign, PartyPopper, UserPlus, Link as LinkIcon, BadgeCheck, Clock,
@@ -712,6 +712,7 @@ const People = () => {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const location = useLocation();
 
     useEffect(() => {
         fetch('/api/employees')
@@ -722,15 +723,42 @@ const People = () => {
             });
     }, []);
 
-    const filtered = employees.filter(e =>
-        e.name.toLowerCase().includes(search.toLowerCase()) ||
-        e.job_title.toLowerCase().includes(search.toLowerCase())
-    );
+    const params = new URLSearchParams(location.search);
+    const paramFilters = {
+        department: params.get('department') || '',
+        division: params.get('division') || '',
+        job_title: params.get('job_title') || '',
+        location: params.get('location') || '',
+    };
+
+    const filtered = employees
+        .filter(e => {
+            if (paramFilters.department && e.department !== paramFilters.department) return false;
+            if (paramFilters.division && e.division !== paramFilters.division) return false;
+            if (paramFilters.job_title && e.job_title !== paramFilters.job_title) return false;
+            if (paramFilters.location && e.location !== paramFilters.location) return false;
+            return true;
+        })
+        .filter(e => (
+            e.name.toLowerCase().includes(search.toLowerCase()) ||
+            (e.job_title || '').toLowerCase().includes(search.toLowerCase())
+        ));
 
     return (
         <div className="people-directory">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 className="font-heading">People Directory</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px' }}>
+                <h2 className="font-heading" style={{ margin: 0 }}>People Directory</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {(paramFilters.department || paramFilters.division || paramFilters.job_title || paramFilters.location) && (
+                        <div className="glass-panel" style={{ padding: '6px 10px', borderRadius: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+                            Filters:
+                            {paramFilters.department && <span style={{ marginLeft: 6 }}><strong>Department</strong>: {paramFilters.department}</span>}
+                            {paramFilters.division && <span style={{ marginLeft: 6 }}><strong>Division</strong>: {paramFilters.division}</span>}
+                            {paramFilters.job_title && <span style={{ marginLeft: 6 }}><strong>Job Title</strong>: {paramFilters.job_title}</span>}
+                            {paramFilters.location && <span style={{ marginLeft: 6 }}><strong>Location</strong>: {paramFilters.location}</span>}
+                        </div>
+                    )}
+                </div>
                 <input
                     type="text"
                     className="glass-input"

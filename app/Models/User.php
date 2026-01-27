@@ -52,6 +52,11 @@ class User extends Authenticatable
         'address_country',
         'home_phone',
         'home_email',
+        'tax_file_number',
+        'nin',
+        'shirt_size',
+        'allergies',
+        'dietary_restrictions',
     ];
 
     /**
@@ -111,5 +116,21 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+
+    /**
+     * Get the education records for this user.
+     */
+    public function educations()
+    {
+        return $this->hasMany(EmployeeEducation::class);
+    }
+
+    /**
+     * Get the visa records for this user.
+     */
+    public function visas()
+    {
+        return $this->hasMany(EmployeeVisa::class);
     }
 }

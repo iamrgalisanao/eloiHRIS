@@ -37,6 +37,8 @@ Route::get('/employees/{id}/time-off', [EmployeeController::class, 'timeOffBalan
 Route::get('/employees/{id}/custom-tabs', [EmployeeController::class, 'customTabs']);
 Route::get('/employees/{id}/documents', [DocumentController::class, 'index']);
 Route::post('/employees/{id}/documents', [DocumentController::class, 'store']);
+Route::get('/employees/{id}/personal', [EmployeeController::class, 'getPersonal']);
+Route::put('/employees/{id}/personal', [EmployeeController::class, 'updatePersonal']);
 Route::post('/time-off/request', [TimeOffRequestController::class, 'store']);
 
 // Employee Fields (Settings) — protected (relaxed in local)

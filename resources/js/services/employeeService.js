@@ -122,3 +122,35 @@ export async function deleteEmployee(id) {
 
     return response.status === 204 ? null : response.json();
 }
+
+/**
+ * Get personal information for employee
+ */
+export async function getPersonalData(id) {
+    const response = await fetch(`${BASE_URL}/${id}/personal`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch personal data');
+    }
+    return response.json();
+}
+
+/**
+ * Update personal information for employee
+ */
+export async function updatePersonalData(id, data) {
+    const response = await fetch(`${BASE_URL}/${id}/personal`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw error;
+    }
+
+    return response.json();
+}

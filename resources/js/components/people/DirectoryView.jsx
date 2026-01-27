@@ -30,12 +30,8 @@ export default function DirectoryView({ data }) {
     const totalCount = letters.reduce((sum, letter) => sum + (data[letter]?.length || 0), 0);
 
     return (
-        <Box sx={{ p: 4 }}>
-            <Box sx={{ mb: 4 }}>
-                <Typography variant="h2" color="primary" gutterBottom>
-                    Directory ({totalCount})
-                </Typography>
-            </Box>
+        <Box sx={{ p: 0 }}>
+            {/* Redundant header removed as it is now in PeoplePage */}
 
             {letters.length === 0 ? (
                 <Box sx={{ py: 8, textAlign: 'center' }}>

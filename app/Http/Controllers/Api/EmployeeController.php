@@ -448,6 +448,162 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Get personal information for employee.
+     */
+    public function getPersonal($id)
+    {
+        $employee = Employee::with(['user.educations', 'user.visas'])->find($id);
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        $user = $employee->user;
+
+        return response()->json([
+            'basic' => [
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'middle_name' => $user->middle_name,
+                'preferred_name' => $user->preferred_name,
+                'birth_date' => $user->birth_date,
+                'gender' => $user->gender,
+                'marital_status' => $user->marital_status,
+                'ssn' => $user->ssn,
+                'tax_file_number' => $user->tax_file_number,
+                'nin' => $user->nin,
+                'shirt_size' => $user->shirt_size,
+                'allergies' => $user->allergies,
+                'dietary_restrictions' => $user->dietary_restrictions,
+            ],
+            'address' => [
+                'address_street_1' => $user->address_street_1,
+                'address_street_2' => $user->address_street_2,
+                'address_city' => $user->address_city,
+                'address_province' => $user->address_province,
+                'address_postal_code' => $user->address_postal_code,
+                'address_country' => $user->address_country,
+            ],
+            'contact' => [
+                'phone_work' => $user->phone_work,
+                'phone_mobile' => $user->phone_mobile,
+                'home_phone' => $user->home_phone,
+                'home_email' => $user->home_email,
+                'email' => $user->email, // Work email
+            ],
+            'social' => [
+                'linkedin_url' => $user->linkedin_url,
+                'twitter_url' => $user->twitter_url,
+                'facebook_url' => $user->facebook_url,
+                'pinterest_url' => $user->pinterest_url,
+                'instagram_url' => $user->instagram_url,
+            ],
+            'educations' => $user->educations,
+            'visas' => $user->visas,
+        ]);
+    }
+
+    /**
+     * Update personal information for employee.
+     */
+    public function updatePersonal(Request $request, $id)
+    {
+        $employee = Employee::with('user')->find($id);
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        $user = $employee->user;
+
+        $validated = $request->validate([
+            'basic.first_name' => 'required|string|max:255',
+            'basic.last_name' => 'required|string|max:255',
+            'basic.middle_name' => 'nullable|string|max:255',
+            'basic.preferred_name' => 'nullable|string|max:255',
+            'basic.birth_date' => 'nullable|date',
+            'basic.gender' => 'nullable|string',
+            'basic.marital_status' => 'nullable|string',
+            'basic.ssn' => 'nullable|string',
+            'basic.tax_file_number' => 'nullable|string',
+            'basic.nin' => 'nullable|string',
+            'basic.shirt_size' => 'nullable|string',
+            'basic.allergies' => 'nullable|string',
+            'basic.dietary_restrictions' => 'nullable|string',
+
+            'address.address_street_1' => 'nullable|string',
+            'address.address_street_2' => 'nullable|string',
+            'address.address_city' => 'nullable|string',
+            'address.address_province' => 'nullable|string',
+            'address.address_postal_code' => 'nullable|string',
+            'address.address_country' => 'nullable|string',
+
+            'contact.phone_work' => 'nullable|string',
+            'contact.phone_mobile' => 'nullable|string',
+            'contact.home_phone' => 'nullable|string',
+            'contact.home_email' => 'nullable|email',
+
+            'social.linkedin_url' => 'nullable|url',
+            'social.twitter_url' => 'nullable|url',
+            'social.facebook_url' => 'nullable|url',
+            'social.pinterest_url' => 'nullable|url',
+            'social.instagram_url' => 'nullable|url',
+
+            'educations' => 'nullable|array',
+            'educations.*.institution' => 'required|string',
+            'educations.*.degree' => 'nullable|string',
+            'educations.*.major' => 'nullable|string',
+            'educations.*.gpa' => 'nullable|string',
+            'educations.*.start_date' => 'nullable|date',
+            'educations.*.end_date' => 'nullable|date',
+
+            'visas' => 'nullable|array',
+            'visas.*.visa_type' => 'required|string',
+            'visas.*.issuing_country' => 'nullable|string',
+            'visas.*.issued_date' => 'nullable|date',
+            'visas.*.expiration_date' => 'nullable|date',
+            'visas.*.status' => 'nullable|string',
+            'visas.*.notes' => 'nullable|string',
+        ]);
+
+        return DB::transaction(function () use ($validated, $user) {
+            // Update User fields
+            // Flatten the nested arrays for the user update
+            $userData = [];
+            if (isset($validated['basic']))
+                $userData = array_merge($userData, $validated['basic']);
+            if (isset($validated['address']))
+                $userData = array_merge($userData, $validated['address']);
+            if (isset($validated['contact']))
+                $userData = array_merge($userData, $validated['contact']);
+            if (isset($validated['social']))
+                $userData = array_merge($userData, $validated['social']);
+
+            if (!empty($userData)) {
+                $user->update($userData);
+            }
+
+            // Sync Education
+            if (isset($validated['educations'])) {
+                $user->educations()->delete();
+                foreach ($validated['educations'] as $edu) {
+                    $user->educations()->create($edu);
+                }
+            }
+
+            // Sync Visas
+            if (isset($validated['visas'])) {
+                $user->visas()->delete();
+                foreach ($validated['visas'] as $visa) {
+                    $user->visas()->create($visa);
+                }
+            }
+
+            return response()->json(['message' => 'Personal information updated successfully']);
+        });
+    }
+
+    /**
      * Transform employee for list view.
      */
     private function transformEmployee($emp)
@@ -478,7 +634,8 @@ class EmployeeController extends Controller
      */
     private function transformEmployeeForDirectory($emp)
     {
-        $directReportsCount = $emp->directReports()->count();
+        $directReports = $emp->directReports()->with('user')->get();
+        $manager = $emp->manager()->with('user', 'jobInfo')->first();
 
         return [
             'id' => $emp->id,
@@ -490,18 +647,27 @@ class EmployeeController extends Controller
             'photo_url' => $emp->user->photo_url,
             'job_title' => $emp->jobInfo->job_title ?? 'N/A',
             'department' => $emp->jobInfo->department ?? null,
+            'division' => $emp->jobInfo->division ?? null,
             'location' => $emp->jobInfo->location ?? null,
+            'employment_status' => $emp->jobInfo->employment_status ?? 'Full-Time',
+            'hire_date' => $emp->jobInfo->hire_date ?? null,
             'timezone' => $emp->user->timezone,
             'local_time' => $emp->user->local_time,
             'region' => $emp->user->region,
             'phone_work' => $emp->user->phone_work,
             'phone_work_ext' => $emp->user->phone_work_ext,
             'phone_mobile' => $emp->user->phone_mobile,
-            'manager' => $emp->manager ? [
-                'id' => $emp->manager->id,
-                'name' => $emp->manager->user->full_name ?? $emp->manager->user->name,
+            'manager' => $manager ? [
+                'id' => $manager->id,
+                'name' => $manager->user->full_name ?? $manager->user->name,
+                'job_title' => $manager->jobInfo->job_title ?? 'N/A',
+                'photo_url' => $manager->user->photo_url
             ] : null,
-            'direct_reports_count' => $directReportsCount,
+            'direct_reports' => $directReports->map(fn($r) => [
+                'id' => $r->id,
+                'name' => $r->user->full_name ?? $r->user->name
+            ]),
+            'direct_reports_count' => $directReports->count(),
             'social_links' => [
                 'linkedin' => $emp->user->linkedin_url,
                 'twitter' => $emp->user->twitter_url,

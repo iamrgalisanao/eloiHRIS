@@ -55,54 +55,52 @@ export default function ListView({ data, filters, onFilterChange, loading }) {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 px: 3,
-                py: 1.5,
-                bgcolor: '#f8fafc',
-                borderBottom: '1px solid #e2e8f0'
+                py: 2,
+                borderBottom: '1px solid var(--border-light)'
             }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <IconButton
                         size="small"
                         onClick={() => setFilterPanelVisible(!filterPanelVisible)}
                         sx={{
-                            bgcolor: filterPanelVisible ? 'var(--primary)' : '#fff',
-                            color: filterPanelVisible ? '#fff' : '#64748b',
-                            border: '1px solid #e2e8f0',
+                            bgcolor: filterPanelVisible ? 'var(--primary)' : 'transparent',
+                            color: filterPanelVisible ? '#fff' : 'var(--text-muted)',
+                            border: '1px solid var(--border-light)',
                             '&:hover': {
-                                bgcolor: filterPanelVisible ? 'var(--primary)' : '#f1f5f9'
+                                bgcolor: filterPanelVisible ? 'var(--primary)' : 'rgba(0,0,0,0.02)'
                             }
                         }}
                     >
                         <Menu fontSize="small" />
                     </IconButton>
 
-                    <FormControl size="small" sx={{ minWidth: 150 }}>
-                        <Select
-                            value={filters.filter || 'all'}
-                            onChange={(e) => onFilterChange({ ...filters, filter: e.target.value })}
-                            sx={{ bgcolor: '#fff' }}
-                        >
-                            <MenuItem value="all">All Employees</MenuItem>
-                            <MenuItem value="active">Active</MenuItem>
-                            <MenuItem value="terminated">Terminated</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography variant="caption" sx={{ fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            VIEWING:
+                        </Typography>
+                        <FormControl size="small" sx={{ minWidth: 160 }}>
+                            <Select
+                                value={filters.filter || 'all'}
+                                onChange={(e) => onFilterChange({ ...filters, filter: e.target.value })}
+                                sx={{
+                                    borderRadius: '12px',
+                                    fontWeight: 600,
+                                    fontSize: '0.85rem',
+                                    '.MuiOutlinedInput-notchedOutline': { borderColor: 'var(--border-light)' }
+                                }}
+                            >
+                                <MenuItem value="all">All Employees</MenuItem>
+                                <MenuItem value="active">Active Employees</MenuItem>
+                                <MenuItem value="terminated">Former Employees</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-                        Showing
+                    <Typography variant="body2" sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.8rem' }}>
+                        Showing {employees.length} of {meta.total || employees.length}
                     </Typography>
-                    <FormControl size="small" sx={{ minWidth: 120 }}>
-                        <Select
-                            value={filters.filter || 'all'}
-                            onChange={(e) => onFilterChange({ ...filters, filter: e.target.value })}
-                            sx={{ bgcolor: '#fff' }}
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="active">Active</MenuItem>
-                            <MenuItem value="terminated">Terminated</MenuItem>
-                        </Select>
-                    </FormControl>
                 </Box>
             </Box>
 

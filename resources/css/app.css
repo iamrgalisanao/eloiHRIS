@@ -38,6 +38,7 @@ body {
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 h1,
@@ -426,120 +427,34 @@ h3,
 }
 
 .dashboard-card {
-    position: absolute;
-    transition: all 0.85s cubic-bezier(0.65, 0, 0.35, 1);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     z-index: 1;
+    min-height: 320px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-/* Default Positioning Logic (3 columns) */
-.dashboard-card[data-index="0"] {
-    left: 0;
-    width: calc(33.333% - 16px);
-    top: 0;
-    height: 100%;
+.dashboard-card.is-expanded {
+    z-index: 50;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-.dashboard-card[data-index="1"] {
-    left: calc(33.333% + 8px);
-    width: calc(33.333% - 16px);
-    top: 0;
-    height: 100%;
+.expandable-row {
+    position: relative;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dashboard-card[data-index="2"] {
-    left: calc(66.666% + 16px);
-    width: calc(33.333% - 16px);
-    top: 0;
-    height: 100%;
-}
+/* Legacy Positioning Logic - Superseded by MUI Grid in App.jsx */
+/* No longer needed but kept for potential back-compat with non-grid rows */
 
-/* Expanded State: Stacked Reflow Logic */
-/* When the LEFT card (index 0) is expanded */
-.dashboard-row[data-expanded-index="0"] .dashboard-card[data-index="0"] {
-    left: 0;
-    width: calc(50% - 12px);
-    top: 0;
-    height: 100%;
-    z-index: 10;
-}
-
-.dashboard-row[data-expanded-index="0"] .dashboard-card[data-index="1"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: 0;
-    height: calc(50% - 12px);
-}
-
-.dashboard-row[data-expanded-index="0"] .dashboard-card[data-index="2"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: calc(50% + 12px);
-    height: calc(50% - 12px);
-}
-
-/* When the MIDDLE card (index 1) is expanded */
-.dashboard-row[data-expanded-index="1"] .dashboard-card[data-index="1"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: 0;
-    height: 100%;
-    z-index: 10;
-}
-
-.dashboard-row[data-expanded-index="1"] .dashboard-card[data-index="0"] {
-    left: 0;
-    width: calc(50% - 12px);
-    top: 0;
-    height: calc(50% - 12px);
-}
-
-.dashboard-row[data-expanded-index="1"] .dashboard-card[data-index="2"] {
-    left: 0;
-    width: calc(50% - 12px);
-    top: calc(50% + 12px);
-    height: calc(50% - 12px);
-}
-
-/* When the RIGHT card (index 2) is expanded */
-.dashboard-row[data-expanded-index="2"] .dashboard-card[data-index="2"] {
-    left: 0;
-    width: calc(50% - 12px);
-    top: 0;
-    height: 100%;
-    z-index: 10;
-}
-
-.dashboard-row[data-expanded-index="2"] .dashboard-card[data-index="0"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: 0;
-    height: calc(50% - 12px);
-}
-
-.dashboard-row[data-expanded-index="2"] .dashboard-card[data-index="1"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: calc(50% + 12px);
-    height: calc(50% - 12px);
-}
-
-/* Special Handling for 2-card Rows (e.g., Row 3) */
-.dashboard-row[data-count="2"] .dashboard-card[data-index="0"] {
-    left: 0;
-    width: calc(50% - 12px);
-    top: 0;
-    height: 100%;
-}
-
-.dashboard-row[data-count="2"] .dashboard-card[data-index="1"] {
-    left: calc(50% + 12px);
-    width: calc(50% - 12px);
-    top: 0;
-    height: 100%;
-}
+/* Standard Grid Handling - Simplified */
 
 .dashboard-card.is-expanded {
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
@@ -549,10 +464,8 @@ h3,
     position: relative !important;
     width: 100% !important;
     left: 0 !important;
-    height: auto !important;
-    min-height: 260px;
-    margin-bottom: 32px;
-    float: none !important;
+    min-height: 320px;
+    margin-bottom: 0 !important;
 }
 
 .dashboard-fixed-grid {

@@ -207,7 +207,7 @@ export default function AddEmployeePage() {
     };
 
     return (
-        <Box sx={{ maxWidth: 1000, mx: 'auto', p: 4, bgcolor: '#fbfcfb', minHeight: '100vh' }}>
+        <Box sx={{ maxWidth: 1600, mx: 'auto', p: 4, bgcolor: '#fbfcfb', minHeight: '100vh' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h4" sx={{ color: '#3c763d', fontWeight: 700, fontFamily: "'Outfit', sans-serif" }}>New Employee</Typography>
                 <Typography

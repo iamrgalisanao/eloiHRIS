@@ -83,14 +83,7 @@ export default function OrgChartView({ data }) {
 
     return (
         <Box sx={{ p: 4 }}>
-            <Box sx={{ mb: 4 }}>
-                <Typography variant="h2" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
-                    Organization Chart
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Hierarchical view of reporting structure
-                </Typography>
-            </Box>
+            {/* Header removed as it is now in PeoplePage */}
 
             <Box sx={{ mt: 6, pl: 2 }}>
                 {renderNode(data)}

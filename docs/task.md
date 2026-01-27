@@ -304,13 +304,53 @@ For every feature/module, follow this routine:
 
 ---
 
-## 📝 Documentation
+## � New Sprint: Employee Personal Tab
+
+**Status:** 📋 Planning Complete  
+**Implementation Plan:** `docs/employee-personal-tab-implementation.md`  
+**Estimated Time:** 10-14 hours
+
+### Phase 1 — Database & Models (2-3 hours) ✅
+- [x] Create migration for `tax_file_number`, `nin`, `shirt_size`, etc.
+- [x] Create `employee_educations` and `employee_visas` tables.
+- [x] Update Models (`User.php`, `Employee.php`) with relationships and fillable fields.
+
+
+### Phase 2 — API Layer (2-3 hours) ✅
+- [x] Implement `GET /api/employees/{id}/personal`
+- [x] Implement `PUT /api/employees/{id}/personal` with relationship syncing.
+
+
+### Phase 3 — Frontend Components (6-8 hours) ✅
+- [x] Create `PersonalTab.jsx` with sidebar-driven layout.
+- [x] Implement **Basic Information** section.
+- [x] Implement **Address** and **Contact** sections.
+- [x] Implement **Social Links** section.
+- [x] Implement dynamic **Education** entry management.
+- [x] Implement **Visa Information** table management.
+- [x] Add global "Save Changes" and "Cancel" functionality.
+
+
+### Phase 4 — Integration & Polish (2 hours) ✅
+- [x] Connect `EmployeeProfile` to `PersonalTab`.
+- [x] Implement loading and success/error states.
+- [x] Final UI/UX review of highlights and transitions.
+- [x] **UI Revision**: Implemented 2-column profile layout with Vitals sidebar and stacked Personal sections.
+- [x] **Complete**: Personal tab fully integrated and tested with new premium design.
+
+
+
+
+---
+
+## �📝 Documentation
 
 ### Implementation Plans
 - [x] `docs/settings-employee-fields-assessment.md` - Employee Fields analysis
 - [x] `docs/settings-standard-fields-implementation.md` - Standard Fields plan
 - [x] `docs/settings-custom-fields-implementation.md` - Custom Fields plan
 - [x] `docs/people-module-implementation.md` - People module plan
+- [x] `docs/employee-personal-tab-implementation.md` - Personal Tab plan
 
 ### Task Tracking
 - [x] This file (`docs/task.md`) - Central task tracker
@@ -384,12 +424,11 @@ For each feature/module to be considered complete:
 
 ### Completed ✅
 - **Employee Fields Settings** (20 categories)
-  - Employee Taxonomy (6)
-  - Standard Fields (5)
-  - Custom Fields (9)
+- **Employee Personal Tab** (Basic Info, Address, Contact, Social, Education, Visa)
 
 ### In Progress 🔄
-- **People/Employee Module** (Planning complete, ready to implement)
+- **People/Employee Module** (Integration & Polish)
+- **Add New Employee** (Complete - Pending QA)
 
 ### Backlog 📋
 - Time Off Management

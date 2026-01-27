@@ -13,9 +13,28 @@ class EmployeeFieldController extends Controller
 {
     private const ALLOWED_CATEGORIES = [
         // Standard fields
-        'compensation_change_reason', 'degree', 'emergency_contact_relationship', 'termination_reason', 'pay_schedule',
+        'compensation_change_reason',
+        'degree',
+        'emergency_contact_relationship',
+        'termination_reason',
+        'pay_schedule',
         // Employee taxonomy fields
-        'department', 'division', 'job_title', 'location', 'employment_status', 'team',
+        'department',
+        'division',
+        'job_title',
+        'location',
+        'employment_status',
+        'team',
+        // Custom fields
+        'approval',
+        'asset_category',
+        'bonus_reason',
+        'category',
+        'finance_approval',
+        'receipt_attached',
+        'secondary_language',
+        'shirt_size',
+        'visa',
     ];
 
     private const CATEGORY_COLUMN_MAP = [
@@ -33,6 +52,16 @@ class EmployeeFieldController extends Controller
         'emergency_contact_relationship' => null,
         'termination_reason' => null,
         'pay_schedule' => null,
+        // Custom fields (no counts/cascade)
+        'approval' => null,
+        'asset_category' => null,
+        'bonus_reason' => null,
+        'category' => null,
+        'finance_approval' => null,
+        'receipt_attached' => null,
+        'secondary_language' => null,
+        'shirt_size' => null,
+        'visa' => null,
     ];
 
     public function index(Request $request)
@@ -70,7 +99,7 @@ class EmployeeFieldController extends Controller
             return [
                 'id' => $row->id,
                 'label' => $row->label,
-                'people_count' => (int)($counts[$row->label] ?? 0),
+                'people_count' => (int) ($counts[$row->label] ?? 0),
             ];
         });
 
@@ -304,7 +333,8 @@ class EmployeeFieldController extends Controller
         // Local fallback: first organization (for dev when auth is bypassed)
         if (app()->environment('local')) {
             $orgId = (int) Organization::query()->value('id');
-            if ($orgId) return $orgId;
+            if ($orgId)
+                return $orgId;
         }
         abort(401, 'Unauthorized: organization context missing');
     }

@@ -23,6 +23,8 @@ Route::get('/settings', [SettingsController::class, 'show']);
 Route::put('/settings', [SettingsController::class, 'update']);
 
 Route::get('/employees', [EmployeeController::class, 'index']);
+// Specific route must come before parameterized one to avoid capturing 'me' as {id}
+Route::get('/employees/me', [EmployeeController::class, 'me']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::get('/employees/{id}/time-off', [EmployeeController::class, 'timeOffBalance']);
 Route::get('/employees/{id}/custom-tabs', [EmployeeController::class, 'customTabs']);
@@ -30,8 +32,8 @@ Route::get('/employees/{id}/documents', [DocumentController::class, 'index']);
 Route::post('/employees/{id}/documents', [DocumentController::class, 'store']);
 Route::post('/time-off/request', [TimeOffRequestController::class, 'store']);
 
-// Employee Fields (Settings) — protected
-Route::middleware(['auth:sanctum', 'can:manage-settings', 'throttle:60,1'])
+// Employee Fields (Settings) — protected (relaxed in local)
+Route::middleware(app()->environment('local') ? ['throttle:60,1'] : ['auth:sanctum', 'can:manage-settings', 'throttle:60,1'])
     ->prefix('employee-fields')
     ->group(function () {
         Route::get('/', [EmployeeFieldController::class, 'index']);

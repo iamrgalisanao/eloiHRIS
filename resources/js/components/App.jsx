@@ -1203,10 +1203,10 @@ const Settings = () => {
 
 const EmployeeProfile = () => {
     const { id } = useParams();
-    const employeeId = id || 1;
     const [activeTab, setActiveTab] = useState('Job');
     const [employee, setEmployee] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [timeOffData, setTimeOffData] = useState(null);
     const [customTabs, setCustomTabs] = useState([]);
     const [documents, setDocuments] = useState([]);
@@ -1227,38 +1227,47 @@ const EmployeeProfile = () => {
 
     const refreshData = () => {
         setLoading(true);
-        // Fetch Employee Basic Info
-        fetch(`/api/employees/${employeeId}`)
+        setError(null);
+
+        const employeeUrl = !id || id === 'me' ? '/api/employees/me' : `/api/employees/${id}`;
+
+        // Fetch employee first, then dependent resources using real id
+        fetch(employeeUrl)
             .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 return res.json();
             })
             .then(data => {
                 setEmployee(data);
+                const realId = data.id;
+
+                // Chain dependent fetches
+                fetch(`/api/employees/${realId}/time-off`)
+                    .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+                    .then(setTimeOffData)
+                    .catch(err => console.error('Failed to fetch time off', err));
+
+                fetch(`/api/employees/${realId}/custom-tabs`)
+                    .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+                    .then(setCustomTabs)
+                    .catch(err => console.error('Failed to fetch custom tabs', err));
+
+                fetch(`/api/employees/${realId}/documents`)
+                    .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+                    .then(setDocuments)
+                    .catch(err => console.error('Failed to fetch docs', err));
+
                 setLoading(false);
             })
             .catch(err => {
-                console.error("Failed to fetch employee", err);
+                console.error('Failed to fetch employee', err);
+                setError('Employee not found or unavailable.');
+                setEmployee(null);
+                setTimeOffData(null);
+                setCustomTabs([]);
+                setDocuments([]);
                 setLoading(false);
             });
-
-        // Fetch Time Off Data
-        fetch(`/api/employees/${employeeId}/time-off`)
-            .then(res => res.json())
-            .then(data => setTimeOffData(data))
-            .catch(err => console.error("Failed to fetch time off", err));
-
-        // Fetch Custom Tabs
-        fetch(`/api/employees/${employeeId}/custom-tabs`)
-            .then(res => res.json())
-            .then(data => setCustomTabs(data))
-            .catch(err => console.error("Failed to fetch custom tabs", err));
-
-        // Fetch Documents
-        fetch(`/api/employees/${employeeId}/documents`)
-            .then(res => res.json())
-            .then(data => setDocuments(data))
-            .catch(err => console.error("Failed to fetch docs", err));
     };
 
     const handleFileUpload = (e) => {
@@ -1269,7 +1278,8 @@ const EmployeeProfile = () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch(`/api/employees/${employeeId}/documents`, {
+        if (!employee?.id) { setUploading(false); return; }
+        fetch(`/api/employees/${employee.id}/documents`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
@@ -1289,10 +1299,13 @@ const EmployeeProfile = () => {
 
     useEffect(() => {
         refreshData();
-    }, [employeeId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
     const renderTabContent = () => {
         if (loading) return <p>Loading employee data...</p>;
+        if (error) return <p style={{ color: 'crimson' }}>{error}</p>;
+        if (!employee) return <p>Employee not found.</p>;
         // Check if dynamic tab
         const dynamicTab = customTabs.find(t => t.label === activeTab);
         if (dynamicTab) {
@@ -1318,9 +1331,9 @@ const EmployeeProfile = () => {
             case 'Job': return (
                 <>
                     <h2 className="font-heading" style={{ marginBottom: '16px' }}>Job Information</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>Title: {employee.job_title}</p>
-                    <p style={{ color: 'var(--text-muted)' }}>Department: {employee.department}</p>
-                    <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Employee ID: {employee.employee_number}</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Title: {employee?.job_title || 'N/A'}</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Department: {employee?.department || 'N/A'}</p>
+                    <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Employee ID: {employee?.employee_number}</p>
                 </>
             );
             case 'Time Off': return (
@@ -1433,7 +1446,7 @@ const App = () => {
                             <Route path="/hiring" element={<Hiring />} />
                             <Route path="/reports" element={<Reports />} />
                             <Route path="/settings" element={<Settings />} />
-                            <Route path="/my-info" element={<Navigate to="/employee/1" replace />} />
+                            <Route path="/my-info" element={<Navigate to="/employee/me" replace />} />
                             <Route path="/employee/:id" element={<EmployeeProfile />} />
                             {/* Fallback */}
                             <Route path="*" element={<Navigate to="/home" replace />} />

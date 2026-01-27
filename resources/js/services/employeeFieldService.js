@@ -2,7 +2,16 @@ export async function listEmployeeFields(category) {
   const res = await fetch(`/api/employee-fields?category=${encodeURIComponent(category)}`, {
     credentials: 'include',
   });
-  if (!res.ok) throw new Error(`List failed: ${res.status}`);
+  if (!res.ok) {
+    let msg = `List failed: ${res.status}`;
+    let body;
+    try { body = await res.json(); } catch (_) {}
+    if (body?.message) msg = body.message;
+    const err = new Error(msg);
+    err.status = res.status;
+    err.body = body;
+    throw err;
+  }
   return res.json();
 }
 

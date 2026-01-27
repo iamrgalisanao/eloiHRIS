@@ -16,6 +16,16 @@ const CATEGORIES = [
   { key: 'emergency_contact_relationship', label: 'Emergency Contact Relationship' },
   { key: 'termination_reason', label: 'Termination Reason' },
   { key: 'pay_schedule', label: 'Pay Schedule' },
+  // Custom fields
+  { key: 'approval', label: 'Approval' },
+  { key: 'asset_category', label: 'Asset Category' },
+  { key: 'bonus_reason', label: 'Bonus: Reason' },
+  { key: 'category', label: 'Category' },
+  { key: 'finance_approval', label: 'Finance Approval' },
+  { key: 'receipt_attached', label: 'Receipt Attached' },
+  { key: 'secondary_language', label: 'Secondary Language' },
+  { key: 'shirt_size', label: 'Shirt size' },
+  { key: 'visa', label: 'Visa' },
 ];
 
 export default function EmployeeFields() {
@@ -110,10 +120,42 @@ export default function EmployeeFields() {
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '24px' }}>
         <div className="glass-panel" style={{ padding: '12px' }}>
-          {CATEGORIES.map(c => (
+          {/* Employee Taxonomy Section */}
+          {CATEGORIES.slice(0, 6).map(c => (
             <div key={c.key} onClick={() => setCategory(c.key)}
-                 style={{ padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
-                   background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600 }}>
+              style={{
+                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
+                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
+              }}>
+              {c.label}
+            </div>
+          ))}
+
+          {/* Standard Fields Section */}
+          <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e2e8f0', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', marginBottom: '8px' }}>
+            Standard Fields
+          </div>
+          {CATEGORIES.slice(6, 11).map(c => (
+            <div key={c.key} onClick={() => setCategory(c.key)}
+              style={{
+                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
+                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
+              }}>
+              {c.label}
+            </div>
+          ))}
+
+
+          {/* Custom Fields Section */}
+          <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e2e8f0', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', marginBottom: '8px' }}>
+            Custom Fields
+          </div>
+          {CATEGORIES.slice(11).map(c => (
+            <div key={c.key} onClick={() => setCategory(c.key)}
+              style={{
+                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
+                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
+              }}>
               {c.label}
             </div>
           ))}
@@ -123,7 +165,7 @@ export default function EmployeeFields() {
             <h3 className="font-heading" style={{ margin: 0 }}>{currentCatLabel}</h3>
             <div style={{ display: 'flex', gap: 8 }}>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder={`New ${currentCatLabel}`}
-                     style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }} />
+                style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }} />
               <button onClick={onAdd} className="btn-primary" style={{ padding: '8px 14px', borderRadius: 8 }}>Add</button>
             </div>
           </div>
@@ -143,7 +185,7 @@ export default function EmployeeFields() {
                       <td style={{ padding: 12 }}>
                         {editingId === item.id ? (
                           <input value={editingLabel} onChange={e => setEditingLabel(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') onRename(item); if (e.key === 'Escape') { setEditingId(null); setEditingLabel(''); } }}
-                                 autoFocus style={{ padding: '6px 8px', border: '1px solid #e2e8f0', borderRadius: 6 }} />
+                            autoFocus style={{ padding: '6px 8px', border: '1px solid #e2e8f0', borderRadius: 6 }} />
                         ) : (
                           item.label
                         )}

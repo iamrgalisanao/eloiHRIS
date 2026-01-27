@@ -38,6 +38,8 @@ class EmployeeController extends Controller
             'name' => $employee->user->name,
             'job_title' => $employee->jobInfo->job_title ?? 'N/A',
             'department' => $employee->jobInfo->department ?? 'N/A',
+            'division' => $employee->jobInfo->division ?? null,
+            'location' => $employee->jobInfo->location ?? null,
             'email' => $employee->user->email,
             'employee_number' => $employee->employee_number,
             'manager' => [
@@ -46,9 +48,57 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function me()
+    public function me(Request $request)
     {
-        return $this->show(1);
+        // Try to resolve the current employee via authenticated user
+        if ($request->user()) {
+            $emp = Employee::with(['jobInfo', 'user'])
+                ->where('user_id', $request->user()->id)
+                ->first();
+            if ($emp) {
+                return response()->json([
+                    'id' => $emp->id,
+                    'name' => $emp->user->name,
+                    'job_title' => $emp->jobInfo->job_title ?? 'N/A',
+                    'department' => $emp->jobInfo->department ?? 'N/A',
+                    'division' => $emp->jobInfo->division ?? null,
+                    'location' => $emp->jobInfo->location ?? null,
+                    'email' => $emp->user->email,
+                    'employee_number' => $emp->employee_number,
+                    'manager' => [
+                        'name' => 'Michael Scott'
+                    ]
+                ]);
+            }
+        }
+
+        // Local dev fallback: first employee (preferably in the first org)
+        if (app()->environment('local')) {
+            $emp = Employee::with(['jobInfo', 'user'])->orderBy('id')->first();
+            if ($emp) {
+                return response()->json([
+                    'id' => $emp->id,
+                    'name' => $emp->user->name,
+                    'job_title' => $emp->jobInfo->job_title ?? 'N/A',
+                    'department' => $emp->jobInfo->department ?? 'N/A',
+                    'division' => $emp->jobInfo->division ?? null,
+                    'location' => $emp->jobInfo->location ?? null,
+                    'email' => $emp->user->email,
+                    'employee_number' => $emp->employee_number,
+                    'manager' => [
+                        'name' => 'Michael Scott'
+                    ]
+                ]);
+            }
+
+            // If no employees exist at all, return helpful error
+            return response()->json([
+                'message' => 'No employees found in database. Please run seeders.',
+                'hint' => 'Run: php artisan db:seed'
+            ], 404);
+        }
+
+        return response()->json(['message' => 'Employee not found'], 404);
     }
 
     public function timeOffBalance($id)

@@ -96,8 +96,8 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
                                     onChange={(e) => setCategory(e.target.value)}
                                     style={{
                                         width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
-                                        outline: 'none', appearance: 'none', background: '#fff', fontSize: '1rem', color: '#1e293b',
-                                        background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
+                                        outline: 'none', appearance: 'none', fontSize: '1rem', color: '#1e293b',
+                                        background: '#fff url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
                                     }}
                                 >
                                     <option>Vacation</option>

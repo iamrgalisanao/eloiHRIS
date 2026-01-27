@@ -18,6 +18,7 @@ import TimeOffCalculatorModal from './TimeOffCalculatorModal';
 import AdjustBalanceModal from './AdjustBalanceModal';
 import AccrualStartDateModal from './AccrualStartDateModal';
 import TimeOffSettings from './TimeOffSettings';
+import EmployeeFields from './settings/EmployeeFields';
 
 // --- Icons replaced with Lucide ---
 
@@ -1156,6 +1157,7 @@ const Settings = () => {
                 <div className="settings-main-area glass-panel" style={{ padding: '40px', display: 'flex', flexDirection: 'column' }}>
                     {activeSubTab === 'Account' && renderAccountContent()}
                     {activeSubTab === 'Time Off' && <TimeOffSettings />}
+                    {activeSubTab === 'Employee Fields' && <EmployeeFields />}
                     {activeSubTab !== 'Account' && activeSubTab !== 'Time Off' && (
                         <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
                             <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>

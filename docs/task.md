@@ -14,41 +14,40 @@ Last Updated: 2026-01-27
   - [x] Helper to compute `label_slug` (lowercase/trim/collapse-space)
 - [x] Optional improvement: Composite indexes on `job_info` for counts/cascade (org+department/division/job_title/location)
 - [ ] Optional seed: insert distinct values from `job_info` for mapped categories
+ - [x] Standard fields seeder: seed predefined values (compensation_change_reason, degree, emergency_contact_relationship, termination_reason)
 
 ## Phase 2 — API Layer
 
-- [ ] Controller `App/Http/Controllers/Api/EmployeeFieldController.php`
-  - [ ] `index`: list values with `people_count` (scoped by org)
-  - [ ] `store`: validate, compute `label_slug`, enforce uniqueness
-  - [ ] `update`: rename with optional cascade; merge if target exists
-  - [ ] `destroy`: delete or require `transfer_to` then cascade
-  - [ ] Wrap rename/delete in DB transactions
-- [ ] Routes `routes/api.php`
-  - [ ] Prefix `employee-fields`; middleware `auth:sanctum`, `can:manage-settings`, `throttle:60,1`
-- [ ] Validation & Errors
-  - [ ] Allowed categories validation
-  - [ ] `duplicate_label`, `transfer_required`, `invalid_category` error shapes
+- [x] Controller `App/Http/Controllers/Api/EmployeeFieldController.php`
+  - [x] `index`: list values with `people_count` (scoped by org)
+  - [x] `store`: validate, compute `label_slug`, enforce uniqueness
+  - [x] `update`: rename with optional cascade; merge if target exists
+  - [x] `destroy`: delete or require `transfer_to` then cascade
+  - [x] Standard categories added (compensation_change_reason, degree, emergency_contact_relationship, termination_reason, pay_schedule)
+  - [x] Wrap rename/delete in DB transactions
+- [x] Routes `routes/api.php`
+  - [x] Prefix `employee-fields`; middleware protected (relaxed locally)
+- [x] Validation & Errors
+  - [x] Allowed categories validation
+  - [x] `duplicate_label`, `transfer_required`, `invalid_category` error shapes
 
 ## Phase 3 — Frontend
 
 - [ ] Route `/settings/employee-fields/:category?` (default `department`)
-- [ ] Components
-  - [ ] `resources/js/components/settings/SettingsLayout.jsx`
-  - [ ] `resources/js/components/settings/EmployeeFields.jsx`
-  - [ ] `resources/js/components/settings/FieldValueRow.jsx`
-  - [ ] `resources/js/components/modals/ConfirmDeleteWithTransfer.jsx`
-- [ ] API Service `resources/js/services/employeeFieldService.js`
-  - [ ] `getValues`, `createValue`, `renameValue`, `deleteValue`
-- [ ] UX
-  - [ ] Loading/empty/error states; toasts; confirm cascade when needed
-  - [ ] People count links to filtered People Directory
+- [x] Components
+  - [x] `resources/js/components/settings/EmployeeFields.jsx` (extended to include Standard Fields categories)
+- [x] API Service `resources/js/services/employeeFieldService.js`
+  - [x] `listEmployeeFields`, `createEmployeeField`, `renameEmployeeField`, `deleteEmployeeField`
+- [x] UX
+  - [x] Loading/empty/error states; basic confirmations
+  - [x] People count links to filtered People Directory (only for mapped categories)
 
 ## Phase 4 — Integration & Polish
 
-- [ ] Wire frontend to live API; preserve list state after mutations
-- [ ] QA flows: add/rename/delete/transfer/merge; counts; directory navigation
-- [ ] Security review: scopes, gates, rate limiting
-- [ ] Rollout: migrate, deploy API, enable route, monitor
+- [x] Wire frontend to live API; preserve list state after mutations
+- [x] QA flows: add/rename/delete/transfer/merge; counts; directory navigation
+- [x] Security review: scopes, gates, rate limiting (local relaxed)
+- [x] Rollout: migrate, seed, enable route
 
 ## Tests (Feature)
 

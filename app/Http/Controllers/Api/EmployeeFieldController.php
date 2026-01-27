@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmployeeFieldValue;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -11,16 +12,27 @@ use Illuminate\Support\Facades\Validator;
 class EmployeeFieldController extends Controller
 {
     private const ALLOWED_CATEGORIES = [
+        // Standard fields
+        'compensation_change_reason', 'degree', 'emergency_contact_relationship', 'termination_reason', 'pay_schedule',
+        // Employee taxonomy fields
         'department', 'division', 'job_title', 'location', 'employment_status', 'team',
     ];
 
     private const CATEGORY_COLUMN_MAP = [
+        // Employee taxonomy mapped to job_info columns
         'department' => 'department',
         'division' => 'division',
         'job_title' => 'job_title',
         'location' => 'location',
+        // Unmapped categories (no counts/cascade)
         'employment_status' => null,
         'team' => null,
+        // Standard fields (no counts/cascade for now)
+        'compensation_change_reason' => null,
+        'degree' => null,
+        'emergency_contact_relationship' => null,
+        'termination_reason' => null,
+        'pay_schedule' => null,
     ];
 
     public function index(Request $request)
@@ -33,7 +45,7 @@ class EmployeeFieldController extends Controller
             ], 422);
         }
 
-        $orgId = $request->user()->organization_id;
+        $orgId = $this->resolveOrgId($request);
 
         $values = EmployeeFieldValue::query()
             ->where('organization_id', $orgId)
@@ -74,7 +86,7 @@ class EmployeeFieldController extends Controller
             ], 422);
         }
 
-        $orgId = $request->user()->organization_id;
+        $orgId = $this->resolveOrgId($request);
 
         $v = Validator::make($request->all(), [
             'label' => ['required', 'string', 'max:120'],
@@ -124,7 +136,7 @@ class EmployeeFieldController extends Controller
             ], 422);
         }
 
-        $orgId = $request->user()->organization_id;
+        $orgId = $this->resolveOrgId($request);
         $cascade = (bool) $request->boolean('cascade');
 
         $v = Validator::make($request->all(), [
@@ -214,7 +226,7 @@ class EmployeeFieldController extends Controller
             ], 422);
         }
 
-        $orgId = $request->user()->organization_id;
+        $orgId = $this->resolveOrgId($request);
         $transferTo = $request->query('transfer_to');
 
         $source = EmployeeFieldValue::query()
@@ -281,5 +293,19 @@ class EmployeeFieldController extends Controller
             ->where('organization_id', $orgId)
             ->where($col, $label)
             ->count();
+    }
+
+    private function resolveOrgId(Request $request): int
+    {
+        $user = $request->user();
+        if ($user && $user->organization_id) {
+            return (int) $user->organization_id;
+        }
+        // Local fallback: first organization (for dev when auth is bypassed)
+        if (app()->environment('local')) {
+            $orgId = (int) Organization::query()->value('id');
+            if ($orgId) return $orgId;
+        }
+        abort(401, 'Unauthorized: organization context missing');
     }
 }

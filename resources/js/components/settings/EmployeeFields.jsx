@@ -3,12 +3,19 @@ import { Link } from 'react-router-dom';
 import { listEmployeeFields, createEmployeeField, renameEmployeeField, deleteEmployeeField } from '../../services/employeeFieldService';
 
 const CATEGORIES = [
+  // Employee taxonomy
   { key: 'department', label: 'Department' },
   { key: 'division', label: 'Division' },
   { key: 'job_title', label: 'Job Title' },
   { key: 'location', label: 'Location' },
   { key: 'employment_status', label: 'Employment Status' },
   { key: 'team', label: 'Teams' },
+  // Standard fields
+  { key: 'compensation_change_reason', label: 'Compensation Change Reason' },
+  { key: 'degree', label: 'Degree' },
+  { key: 'emergency_contact_relationship', label: 'Emergency Contact Relationship' },
+  { key: 'termination_reason', label: 'Termination Reason' },
+  { key: 'pay_schedule', label: 'Pay Schedule' },
 ];
 
 export default function EmployeeFields() {

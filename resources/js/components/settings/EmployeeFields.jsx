@@ -123,10 +123,7 @@ export default function EmployeeFields() {
           {/* Employee Taxonomy Section */}
           {CATEGORIES.slice(0, 6).map(c => (
             <div key={c.key} onClick={() => setCategory(c.key)}
-              style={{
-                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
-                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
-              }}>
+              className={`nav-highlight-item ${category === c.key ? 'active' : ''}`}>
               {c.label}
             </div>
           ))}
@@ -137,10 +134,7 @@ export default function EmployeeFields() {
           </div>
           {CATEGORIES.slice(6, 11).map(c => (
             <div key={c.key} onClick={() => setCategory(c.key)}
-              style={{
-                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
-                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
-              }}>
+              className={`nav-highlight-item ${category === c.key ? 'active' : ''}`}>
               {c.label}
             </div>
           ))}
@@ -152,17 +146,14 @@ export default function EmployeeFields() {
           </div>
           {CATEGORIES.slice(11).map(c => (
             <div key={c.key} onClick={() => setCategory(c.key)}
-              style={{
-                padding: '10px 12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
-                background: category === c.key ? 'var(--primary)' : 'transparent', color: category === c.key ? '#fff' : 'var(--text-main)', fontWeight: 600
-              }}>
+              className={`nav-highlight-item ${category === c.key ? 'active' : ''}`}>
               {c.label}
             </div>
           ))}
         </div>
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h3 className="font-heading" style={{ margin: 0 }}>{currentCatLabel}</h3>
+            <h3 className="font-heading" style={{ margin: 0, fontSize: '14px' }}>{currentCatLabel}</h3>
             <div style={{ display: 'flex', gap: 8 }}>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder={`New ${currentCatLabel}`}
                 style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }} />

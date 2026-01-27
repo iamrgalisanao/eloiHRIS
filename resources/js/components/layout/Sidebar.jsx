@@ -1,75 +1,190 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, User, Users, Briefcase, BarChart3, Folder, Settings, Menu } from 'lucide-react';
+import {
+    Drawer,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Box,
+    Typography,
+    IconButton,
+    Avatar,
+    Divider
+} from '@mui/material';
+import {
+    Home,
+    Person,
+    People,
+    Work,
+    BarChart,
+    Folder,
+    Settings,
+    Menu as MenuIcon
+} from '@mui/icons-material';
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
     const menuItems = [
         {
-            icon: <Home size={20} />,
+            icon: <Home />,
             label: 'Home',
             path: '/home'
         },
         {
-            icon: <User size={20} />,
+            icon: <Person />,
             label: 'My Info',
-            path: '/my-info'
+            path: '/employee/me'
         },
         {
-            icon: <Users size={20} />,
+            icon: <People />,
             label: 'People',
             path: '/people'
         },
         {
-            icon: <Briefcase size={20} />,
+            icon: <Work />,
             label: 'Hiring',
             path: '/hiring'
         },
         {
-            icon: <BarChart3 size={20} />,
+            icon: <BarChart />,
             label: 'Reports',
             path: '/reports'
         },
         {
-            icon: <Folder size={20} />,
+            icon: <Folder />,
             label: 'Files',
             path: '/files'
         },
         {
-            icon: <Settings size={20} />,
+            icon: <Settings />,
             label: 'Settings',
             path: '/settings'
         },
     ];
 
-    return (
-        <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-            <div className="sidebar-logo">
-                Golden Record
-            </div>
-            <nav className="sidebar-nav">
-                {menuItems.map((item, index) => (
-                    <NavLink
-                        key={index}
-                        to={item.path}
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                    >
-                        <span className="nav-icon">{item.icon}</span>
-                        <span className="nav-label">{item.label}</span>
-                    </NavLink>
-                ))}
-            </nav>
+    const drawerWidth = isCollapsed ? 80 : 240;
 
-            <div className="sidebar-toggle">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'flex-start' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
-                        <User size={24} />
-                    </div>
-                    <button className="toggle-btn" onClick={onToggle} style={{ marginLeft: '-4px' }}>
-                        <Menu size={20} />
-                    </button>
-                </div>
-            </div>
-        </aside>
+    return (
+        <Drawer
+            variant="permanent"
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                transition: 'width 0.3s',
+                '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                    borderRight: '1px solid #e2e8f0',
+                    transition: 'width 0.3s',
+                    overflowX: 'hidden',
+                    bgcolor: '#fff'
+                },
+            }}
+        >
+            {/* Logo */}
+            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'flex-start', gap: 2 }}>
+                <Box sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: 'primary.main',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#fff',
+                    flexShrink: 0
+                }}>
+                    <People sx={{ fontSize: 20 }} />
+                </Box>
+                {!isCollapsed && (
+                    <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main', letterSpacing: '-0.5px', fontFamily: "'Outfit', sans-serif" }}>
+                        HRIS
+                    </Typography>
+                )}
+            </Box>
+
+            <List sx={{ flex: 1, px: 2, py: 2 }}>
+                {menuItems.map((item, index) => (
+                    <ListItem key={index} disablePadding sx={{ mb: 1 }}>
+                        <ListItemButton
+                            component={NavLink}
+                            to={item.path}
+                            sx={{
+                                borderRadius: 3,
+                                minHeight: 48,
+                                justifyContent: isCollapsed ? 'center' : 'flex-start',
+                                px: 2.5,
+                                color: 'text.secondary',
+                                transition: 'all 0.2s',
+                                '&.active': {
+                                    bgcolor: 'primary.main',
+                                    color: '#fff',
+                                    fontWeight: 700,
+                                    '& .MuiListItemIcon-root': {
+                                        color: '#fff',
+                                    }
+                                },
+                                '&:hover': {
+                                    bgcolor: 'rgba(34, 197, 94, 0.04)',
+                                    color: 'primary.main',
+                                    '& .MuiListItemIcon-root': {
+                                        color: 'primary.main',
+                                    }
+                                }
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: isCollapsed ? 0 : 2,
+                                    justifyContent: 'center',
+                                    color: 'inherit',
+                                    transition: 'color 0.2s'
+                                }}
+                            >
+                                {item.icon}
+                            </ListItemIcon>
+                            {!isCollapsed && (
+                                <ListItemText
+                                    primary={item.label}
+                                    primaryTypographyProps={{
+                                        fontSize: '0.95rem',
+                                        fontWeight: 'inherit',
+                                        fontFamily: "'Outfit', sans-serif"
+                                    }}
+                                />
+                            )}
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+
+            {/* Bottom Section */}
+            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', mt: 'auto', mb: 2 }}>
+                <IconButton
+                    onClick={onToggle}
+                    size="small"
+                    sx={{
+                        bgcolor: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        '&:hover': { bgcolor: '#f1f5f9' }
+                    }}
+                >
+                    <MenuIcon fontSize="small" />
+                </IconButton>
+                <Avatar sx={{
+                    bgcolor: 'primary.light',
+                    color: 'primary.contrastText',
+                    width: 40,
+                    height: 40,
+                    cursor: 'pointer',
+                    '&:hover': { boxShadow: '0 0 0 4px rgba(34, 197, 94, 0.1)' }
+                }}>
+                    <Person />
+                </Avatar>
+            </Box>
+        </Drawer>
     );
 };
 

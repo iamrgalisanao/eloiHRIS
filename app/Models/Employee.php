@@ -61,4 +61,37 @@ class Employee extends Model
     {
         return $this->hasMany(Employee::class, 'reports_to_id');
     }
+
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class, 'reports_to_id');
+    }
+
+    /**
+     * Scope to filter active employees.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Scope to filter by department.
+     */
+    public function scopeByDepartment($query, $department)
+    {
+        return $query->whereHas('jobInfo', function ($q) use ($department) {
+            $q->where('department', $department);
+        });
+    }
+
+    /**
+     * Scope to filter by location.
+     */
+    public function scopeByLocation($query, $location)
+    {
+        return $query->whereHas('jobInfo', function ($q) use ($location) {
+            $q->where('location', $location);
+        });
+    }
 }

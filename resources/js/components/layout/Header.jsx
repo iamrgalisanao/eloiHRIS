@@ -1,51 +1,119 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Inbox, HelpCircle, Settings as SettingsIcon, Search, MessageSquare, ChevronDown } from 'lucide-react';
+import {
+    AppBar,
+    Toolbar,
+    Box,
+    IconButton,
+    TextField,
+    InputAdornment,
+    Badge,
+    Avatar,
+    Button,
+    Typography
+} from '@mui/material';
+import {
+    AutoAwesome,
+    Inbox,
+    HelpOutline,
+    Settings,
+    Search,
+    Chat,
+    KeyboardArrowDown
+} from '@mui/icons-material';
 
 const Header = () => {
     return (
-        <header className="top-header">
-            <div className="header-left">
-                <div className="company-logo-header">
-                    <div className="logo-circle">
-                        <Sparkles size={18} />
-                    </div>
-                    <span className="logo-text">COMPANY LOGO HERE</span>
-                </div>
-            </div>
+        <AppBar
+            position="sticky"
+            color="default"
+            elevation={0}
+            sx={{
+                bgcolor: '#fff',
+                borderBottom: '1px solid #e2e8f0'
+            }}
+        >
+            <Toolbar sx={{ justifyContent: 'space-between', px: 3 }}>
+                {/* Left Side - Logo */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Box sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 2,
+                        bgcolor: 'primary.main',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff'
+                    }}>
+                        <AutoAwesome fontSize="small" />
+                    </Box>
+                    <Typography variant="body2" fontWeight={600} color="text.secondary">
+                        COMPANY LOGO HERE
+                    </Typography>
+                </Box>
 
-            <div className="header-right">
-                <div className="search-wrapper">
-                    <Search size={16} className="search-icon" />
-                    <input
-                        type="text"
+                {/* Right Side - Actions */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    {/* Search */}
+                    <TextField
+                        size="small"
                         placeholder="Search..."
-                        className="header-search-input"
+                        sx={{
+                            width: 300,
+                            '& .MuiOutlinedInput-root': {
+                                bgcolor: '#f8fafc'
+                            }
+                        }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search fontSize="small" />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
-                </div>
 
-                <div className="header-actions">
-                    <div className="action-item notification">
-                        <Inbox size={20} />
-                        <span className="notification-badge">19</span>
-                    </div>
-                    <div className="action-item">
-                        <HelpCircle size={20} />
-                    </div>
-                    <Link to="/settings" className="action-item settings-trigger">
-                        <SettingsIcon size={20} />
-                    </Link>
-                    <button className="ask-button">
-                        <MessageSquare size={16} />
-                        <span>Ask</span>
-                    </button>
-                    <div className="user-profile-trigger">
-                        <div className="user-avatar-header">MK</div>
-                        <ChevronDown size={14} className="user-dropdown-arrow" />
-                    </div>
-                </div>
-            </div>
-        </header>
+                    {/* Inbox */}
+                    <IconButton>
+                        <Badge badgeContent={19} color="error">
+                            <Inbox />
+                        </Badge>
+                    </IconButton>
+
+                    {/* Help */}
+                    <IconButton>
+                        <HelpOutline />
+                    </IconButton>
+
+                    {/* Settings */}
+                    <IconButton component={Link} to="/settings">
+                        <Settings />
+                    </IconButton>
+
+                    {/* Ask Button */}
+                    <Button
+                        variant="outlined"
+                        startIcon={<Chat />}
+                        sx={{
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            px: 2
+                        }}
+                    >
+                        Ask
+                    </Button>
+
+                    {/* User Profile */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }}>
+                        <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
+                            MK
+                        </Avatar>
+                        <KeyboardArrowDown fontSize="small" />
+                    </Box>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 };
 

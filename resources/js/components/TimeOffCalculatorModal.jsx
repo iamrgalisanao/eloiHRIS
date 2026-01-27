@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
-import { X, User, Calendar, ChevronRight } from 'lucide-react';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Box,
+    Typography,
+    IconButton,
+    TextField,
+    MenuItem,
+    Button,
+    Avatar,
+    Stack,
+    Collapse,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper
+} from '@mui/material';
+import { Close, ChevronRight, ExpandMore, CalendarToday } from '@mui/icons-material';
 
 const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
     const [category, setCategory] = useState('Vacation');
     const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
     const [isExpanded, setIsExpanded] = useState(false);
-
-    if (!isOpen) return null;
 
     // Simulation settings
     const currentBalance = 29.65;
@@ -40,168 +60,154 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
     const displayDetails = [...accrualDetails].reverse();
 
     return (
-        <div className="modal-overlay" style={{
-            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-            background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000
-        }}>
-            <div className="modal-content" style={{
-                background: '#fff', borderRadius: '24px', width: '750px',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
-                overflow: 'hidden', animation: 'modalSlideUp 0.3s ease-out'
+        <Dialog
+            open={isOpen}
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+                sx: { borderRadius: 4 }
+            }}
+        >
+            <DialogTitle sx={{
+                px: 4,
+                py: 3,
+                borderBottom: '1px solid #e2e8f0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
             }}>
-                {/* Header */}
-                <div style={{
-                    padding: '24px 32px', borderBottom: '1px solid #f1f5f9',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                }}>
-                    <h2 className="font-heading" style={{ color: '#2d4a22', margin: 0, fontSize: '1.75rem', fontWeight: '700' }}>Calculate Time Off</h2>
-                    <button onClick={onClose} style={{
-                        width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0',
-                        background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        cursor: 'pointer', color: '#64748b'
-                    }}>
-                        <X size={20} strokeWidth={2.5} />
-                    </button>
-                </div>
+                <Typography variant="h4" color="primary" sx={{ fontWeight: 700 }}>Calculate Time Off</Typography>
+                <IconButton onClick={onClose} size="small">
+                    <Close />
+                </IconButton>
+            </DialogTitle>
 
-                <div style={{ padding: '32px' }}>
-                    {/* User Profile Info */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
-                        <div style={{
-                            width: '64px', height: '64px', borderRadius: '12px', background: '#94a3b8',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff'
-                        }}>
-                            <User size={32} />
-                        </div>
-                        <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b', lineHeight: '1.2' }}>
-                                {userName || 'mel galisanao'}
-                            </div>
-                            <div style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
-                                {jobTitle || 'Sr. HR Administrator'}
-                            </div>
-                        </div>
-                    </div>
+            <DialogContent sx={{ p: 4 }}>
+                {/* User Profile Info */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                    <Avatar
+                        sx={{ width: 64, height: 64, bgcolor: 'secondary.light', fontSize: '1.5rem', fontWeight: 700 }}
+                    >
+                        {userName?.split(' ').map(n => n[0]).join('') || '??'}
+                    </Avatar>
+                    <Box>
+                        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                            {userName || 'mel galisanao'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                            {jobTitle || 'Sr. HR Administrator'}
+                        </Typography>
+                    </Box>
+                </Box>
 
-                    <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '32px' }}></div>
-
-                    {/* Simulation Controls */}
-                    <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Time Off Category</label>
-                            <div style={{ position: 'relative' }}>
-                                <select
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    style={{
-                                        width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
-                                        outline: 'none', appearance: 'none', fontSize: '1rem', color: '#1e293b',
-                                        background: '#fff url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 16px center/16px'
-                                    }}
-                                >
-                                    <option>Vacation</option>
-                                    <option>Sick Leave</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>As of Date*</label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="date"
-                                    value={asOfDate}
-                                    onChange={(e) => setAsOfDate(e.target.value)}
-                                    style={{
-                                        width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid #cbd5e1',
-                                        outline: 'none', fontSize: '1rem', color: '#1e293b'
-                                    }}
-                                />
-                                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
-                                    <Calendar size={18} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <Stack spacing={3}>
+                    <Box sx={{ display: 'flex', gap: 3 }}>
+                        <TextField
+                            select
+                            label="Time Off Category"
+                            fullWidth
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <MenuItem value="Vacation">Vacation</MenuItem>
+                            <MenuItem value="Sick Leave">Sick Leave</MenuItem>
+                        </TextField>
+                        <TextField
+                            label="As of Date"
+                            type="date"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            value={asOfDate}
+                            onChange={(e) => setAsOfDate(e.target.value)}
+                        />
+                    </Box>
 
                     {/* Result Banner */}
-                    <div style={{
-                        padding: '40px 32px', borderRadius: '16px', border: '1px solid #e2e8f0',
-                        background: '#fff', marginBottom: '32px'
-                    }}>
-                        <div className="font-heading" style={{ fontSize: '3.6rem', fontWeight: '800', color: '#2d4a22', letterSpacing: '-2px', lineHeight: '1' }}>
-                            {projectedBalance.toFixed(2)} <span style={{ fontSize: '2.5rem' }}>hours</span>
-                        </div>
-                    </div>
-
-                    {/* Detail Table */}
-                    <div
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b',
-                            cursor: 'pointer', fontWeight: '600', fontSize: '1rem', marginBottom: '20px',
-                            userSelect: 'none'
+                    <Paper
+                        variant="outlined"
+                        sx={{
+                            p: 4,
+                            borderRadius: 4,
+                            bgcolor: '#f8fafc',
+                            textAlign: 'center',
+                            border: '1px solid #e2e8f0'
                         }}
                     >
-                        <div style={{
-                            width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s'
-                        }}>
-                            <ChevronRight size={14} fill="currentColor" />
-                        </div>
-                        Accrual Details
-                    </div>
+                        <Typography variant="h1" color="primary" sx={{ fontWeight: 800, fontSize: '3.5rem', lineHeight: 1 }}>
+                            {projectedBalance.toFixed(2)}
+                            <Typography component="span" variant="h3" sx={{ ml: 1, fontWeight: 700, opacity: 0.8 }}>
+                                hours
+                            </Typography>
+                        </Typography>
+                    </Paper>
 
-                    {isExpanded && (
-                        <div style={{
-                            maxHeight: '260px', overflowY: 'auto', border: '1px solid #f1f5f9',
-                            borderRadius: '12px', background: '#fff'
-                        }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-                                <thead style={{ background: '#f8fafc', color: '#64748b', position: 'sticky', top: 0, zIndex: 10 }}>
-                                    <tr>
-                                        <th style={{ padding: '12px 20px', fontWeight: '700' }}>Date</th>
-                                        <th style={{ padding: '12px 20px', fontWeight: '700' }}>Description</th>
-                                        <th style={{ padding: '12px 20px', fontWeight: '700', textAlign: 'right' }}>Hours</th>
-                                        <th style={{ padding: '12px 20px', fontWeight: '700', textAlign: 'right' }}>Balance</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {displayDetails.length > 0 ? displayDetails.map((row, i) => (
-                                        <tr key={i} style={{ borderTop: '1px solid #f1f5f9' }}>
-                                            <td style={{ padding: '16px 20px', color: '#1e293b', fontWeight: '600' }}>{row.date}</td>
-                                            <td style={{ padding: '16px 20px', color: '#64748b' }}>{row.action}</td>
-                                            <td style={{ padding: '16px 20px', textAlign: 'right', color: '#059669', fontWeight: '700' }}>{row.hours}</td>
-                                            <td style={{ padding: '16px 20px', textAlign: 'right', color: '#1e293b', fontWeight: '700' }}>{row.balance}</td>
-                                        </tr>
-                                    )) : (
-                                        <tr>
-                                            <td colSpan="4" style={{ padding: '32px', textAlign: 'center', color: '#94a3b8', fontStyle: 'italic' }}>
-                                                No projected changes before this date.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
+                    {/* Detail Toggle */}
+                    <Box>
+                        <Button
+                            color="inherit"
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            startIcon={isExpanded ? <ExpandMore /> : <ChevronRight />}
+                            sx={{
+                                fontWeight: 700,
+                                color: 'text.secondary',
+                                px: 0,
+                                '&:hover': { bgcolor: 'transparent', color: 'primary.main' }
+                            }}
+                        >
+                            Accrual Details
+                        </Button>
 
-                {/* Footer */}
-                <div style={{
-                    padding: '24px 32px', background: '#f8fafc', display: 'flex',
-                    justifyContent: 'flex-end', borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px'
-                }}>
-                    <button onClick={onClose} style={{
-                        padding: '12px 48px', borderRadius: '30px', border: 'none',
-                        background: '#2d4a22', color: '#fff', fontWeight: '700', fontSize: '1rem',
-                        cursor: 'pointer', transition: 'all 0.2s'
-                    }}>
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
+                        <Collapse in={isExpanded}>
+                            <TableContainer component={Paper} variant="outlined" sx={{ mt: 2, borderRadius: 3, maxHeight: 300 }}>
+                                <Table size="small" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 700 }}>Date</TableCell>
+                                            <TableCell sx={{ fontWeight: 700 }}>Description</TableCell>
+                                            <TableCell sx={{ fontWeight: 700 }} align="right">Hours</TableCell>
+                                            <TableCell sx={{ fontWeight: 700 }} align="right">Balance</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {displayDetails.length > 0 ? displayDetails.map((row, i) => (
+                                            <TableRow key={i} hover>
+                                                <TableCell sx={{ fontWeight: 600 }}>{row.date}</TableCell>
+                                                <TableCell color="text.secondary">{row.action}</TableCell>
+                                                <TableCell align="right" sx={{ color: 'success.main', fontWeight: 700 }}>{row.hours}</TableCell>
+                                                <TableCell align="right" sx={{ fontWeight: 700 }}>{row.balance}</TableCell>
+                                            </TableRow>
+                                        )) : (
+                                            <TableRow>
+                                                <TableCell colSpan={4} align="center" sx={{ py: 4, color: 'text.secondary', fontStyle: 'italic' }}>
+                                                    No projected changes before this date.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Collapse>
+                    </Box>
+                </Stack>
+            </DialogContent>
+
+            <DialogActions sx={{ px: 4, py: 3, bgcolor: '#f8fafc' }}>
+                <Button
+                    onClick={onClose}
+                    variant="contained"
+                    sx={{
+                        borderRadius: '30px',
+                        px: 6,
+                        py: 1,
+                        fontWeight: 700,
+                        boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)'
+                    }}
+                >
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 };
 

@@ -25,6 +25,13 @@ Route::put('/settings', [SettingsController::class, 'update']);
 Route::get('/employees', [EmployeeController::class, 'index']);
 // Specific route must come before parameterized one to avoid capturing 'me' as {id}
 Route::get('/employees/me', [EmployeeController::class, 'me']);
+Route::get('/employees/creation-options', [EmployeeController::class, 'creationOptions']);
+Route::post('/employees', [EmployeeController::class, 'store']);
+// People module routes
+Route::get('/employees/directory', [EmployeeController::class, 'directory']);
+Route::get('/employees/org-chart', [EmployeeController::class, 'orgChart']);
+Route::get('/employees/filter-options', [EmployeeController::class, 'filterOptions']);
+// Employee detail routes
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::get('/employees/{id}/time-off', [EmployeeController::class, 'timeOffBalance']);
 Route::get('/employees/{id}/custom-tabs', [EmployeeController::class, 'customTabs']);

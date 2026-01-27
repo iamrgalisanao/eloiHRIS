@@ -17,7 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             FoundationSeeder::class,
+            StandardFieldsSeeder::class,
+            TaxonomyDefaultsSeeder::class,
             DashboardDataSeeder::class,
+            CustomFieldsSeeder::class,
+            SeedEmployeeFieldValues::class,
         ]);
     }
 }

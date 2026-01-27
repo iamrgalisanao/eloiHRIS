@@ -13,258 +13,20 @@ import {
 import Sidebar from './layout/Sidebar';
 import Header from './layout/Header';
 import ProfileHeader from './ProfileHeader';
+import TimeOffModule from './TimeOffModule';
 import TimeOffRequestModal from './TimeOffRequestModal';
 import TimeOffCalculatorModal from './TimeOffCalculatorModal';
 import AdjustBalanceModal from './AdjustBalanceModal';
 import AccrualStartDateModal from './AccrualStartDateModal';
 import TimeOffSettings from './TimeOffSettings';
 import EmployeeFields from './settings/EmployeeFields';
+import PeoplePage from './people/PeoplePage';
+import AddEmployeePage from './people/AddEmployeePage';
+import { Box } from '@mui/material';
 
 // --- Icons replaced with Lucide ---
 
-const SettingsDropdown = ({ isOpen, onClose, onOpenAccrualModal }) => {
-    if (!isOpen) return null;
-
-    return (
-        <div
-            className="glass-panel"
-            style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                marginTop: '8px',
-                width: '280px',
-                background: '#fff',
-                borderRadius: '16px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                zIndex: 1000,
-                overflow: 'hidden',
-                padding: '8px',
-                border: '1px solid #f1f5f9'
-            }}
-        >
-            <div
-                style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
-                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
-                onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                onClick={() => {
-                    onOpenAccrualModal();
-                    onClose();
-                }}
-            >
-                Accrual Level Start Date: 10/29/2022
-            </div>
-            <div style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
-                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
-                onMouseLeave={(e) => e.target.style.background = 'transparent'}>
-                Add Time Off Policy
-            </div>
-            <div style={{ padding: '12px 16px', fontSize: '0.9rem', color: '#1e293b', fontWeight: '500', cursor: 'pointer', transition: 'background 0.2s', borderRadius: '8px' }}
-                onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
-                onMouseLeave={(e) => e.target.style.background = 'transparent'}>
-                Pause Accruals
-            </div>
-        </div>
-    );
-};
-
-const TimeOffModule = ({ stats, getBalance, isCalculatorOpen, setIsCalculatorOpen, setIsModalOpen, onAdjust }) => {
-    const [openDropdown, setOpenDropdown] = useState(null); // 'header' or item index i
-    const [isAccrualModalOpen, setIsAccrualModalOpen] = useState(false);
-
-    const toggleDropdown = (id) => {
-        setOpenDropdown(openDropdown === id ? null : id);
-    };
-
-    const balanceItems = [
-        { label: 'Vacation Available', type: 'Vacation', icon: Palmtree, sub: '(8 hours scheduled)', policy: 'Vacation Full-Time' },
-        { label: 'Sick Available', type: 'Sick', icon: ShieldPlus, sub: 'Sick Full-Time' },
-        { label: 'Bereavement Used (YTD)', type: 'Bereavement', icon: Briefcase, unit: 'Days', sub: 'Bereavement Flexible Policy' },
-    ];
-
-    const upcomingLeaves = [
-        { date: 'Feb 14', label: '8 hours of Vacation', icon: Palmtree },
-        { date: 'Feb 15', label: '8 hours of Sick', icon: ShieldPlus },
-        { date: 'Feb 15 - 16', label: '16 hours of Sick', icon: ShieldPlus },
-        { date: 'Apr 4 - 5', label: '8 hours of Vacation', icon: Palmtree },
-    ];
-
-    const SmallActionBtn = ({ icon: Icon, onClick }) => (
-        <button
-            onClick={onClick}
-            style={{
-                width: '32px', height: '32px', borderRadius: '8px', border: '1px solid #e2e8f0',
-                background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', color: '#2d4a22'
-            }}
-        >
-            <Icon size={14} />
-        </button>
-    );
-
-    return (
-        <div className="time-off-module-container" style={{ animation: 'fadeIn 0.4s ease' }}>
-            {/* Module Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2d4a22' }}>
-                    <CalendarPlus size={24} />
-                    <h1 className="font-heading" style={{ fontSize: '1.75rem', fontWeight: '700', margin: 0 }}>Time Off</h1>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ position: 'relative' }}>
-                        <div
-                            className="glass-panel"
-                            onClick={() => toggleDropdown('header')}
-                            style={{
-                                padding: '6px 14px', borderRadius: '24px', display: 'flex', alignItems: 'center', gap: '8px',
-                                border: '1.5px solid #2d4a22', background: '#fff', cursor: 'pointer', color: '#2d4a22'
-                            }}
-                        >
-                            <SettingsIcon size={18} />
-                            <span style={{ fontSize: '0.6rem', transform: openDropdown === 'header' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
-                        </div>
-                        <SettingsDropdown
-                            isOpen={openDropdown === 'header'}
-                            onClose={() => setOpenDropdown(null)}
-                            onOpenAccrualModal={() => setIsAccrualModalOpen(true)}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Top Cards Carousel */}
-            <div style={{ position: 'relative', marginBottom: '40px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-                    {balanceItems.map((item, i) => (
-                        <div key={i} className="glass-panel" style={{ padding: '32px', borderRadius: '20px', border: '1px solid #f1f5f9', background: '#fff' }}>
-                            <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#f8fafc', color: '#2d4a22', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-                                <item.icon size={24} />
-                            </div>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#2d4a22', letterSpacing: '-0.5px', marginBottom: '4px' }}>
-                                {getBalance(item.type)} {item.unit || 'Hours'}
-                            </div>
-                            <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e293b', marginBottom: '4px' }}>{item.label}</div>
-                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{item.sub}</div>
-                            {item.sub2 && <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{item.sub2}</div>}
-
-                            {/* Card Actions */}
-                            <div style={{ display: 'flex', gap: '8px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
-                                <SmallActionBtn icon={CalendarPlus} onClick={() => setIsModalOpen(true)} />
-                                <SmallActionBtn icon={Calculator} onClick={() => setIsCalculatorOpen(true)} />
-                                <SmallActionBtn icon={Pencil} onClick={() => onAdjust(item.type)} />
-                                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
-                                    <div style={{ position: 'relative' }}>
-                                        <div
-                                            className="glass-panel"
-                                            onClick={() => toggleDropdown(i)}
-                                            style={{ padding: '4px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer' }}
-                                        >
-                                            <SettingsIcon size={14} color="#64748b" />
-                                            <span style={{ fontSize: '0.5rem', transform: openDropdown === i ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
-                                        </div>
-                                        <SettingsDropdown
-                                            isOpen={openDropdown === i}
-                                            onClose={() => setOpenDropdown(null)}
-                                            onOpenAccrualModal={() => setIsAccrualModalOpen(true)}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <button style={{
-                    position: 'absolute', right: '-18px', top: '50%', transform: 'translateY(-50%)',
-                    width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0',
-                    background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer', color: '#64748b', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-                }}>
-                    <ChevronRight size={18} />
-                </button>
-            </div >
-
-            {/* Upcoming Section */}
-            < div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', marginBottom: '40px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', color: '#2d4a22' }}>
-                    <Clock size={20} />
-                    <h3 className="font-heading" style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>Upcoming Time Off</h3>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                    {upcomingLeaves.map((leave, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '16px 0', borderBottom: i < upcomingLeaves.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f8fafc', color: '#2d4a22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <leave.icon size={24} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '1.05rem', fontWeight: '700', color: '#1e293b' }}>{leave.date}</div>
-                                <div style={{ fontSize: '0.9rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <CheckCircle2 size={14} color="#5cb85c" /> {leave.label}
-                                </div>
-                            </div>
-                            <button className="glass-panel" style={{ padding: '8px 24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '0.85rem', fontWeight: '600', color: '#1e293b', cursor: 'pointer' }}>Edit</button>
-                        </div>
-                    ))}
-                </div>
-            </div >
-
-            {/* History Section */}
-            < div className="glass-panel" style={{ borderRadius: '24px', padding: '32px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', color: '#2d4a22' }}>
-                    <History size={20} />
-                    <h3 className="font-heading" style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>History</h3>
-                </div>
-
-                {/* History Filters */}
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
-                    <select style={{ padding: '10px 16px', borderRadius: '10px', border: '1px solid #e2e8f0', outline: 'none', background: '#fff', fontSize: '0.9rem', color: '#1e293b', minWidth: '150px' }}>
-                        <option>Vacation</option>
-                    </select>
-                    <select style={{ padding: '10px 16px', borderRadius: '10px', border: '1px solid #e2e8f0', outline: 'none', background: '#fff', fontSize: '0.9rem', color: '#1e293b', minWidth: '100px' }}>
-                        <option>All</option>
-                    </select>
-                    <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
-                        <div className="glass-panel" style={{ padding: '8px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.85rem', color: '#1e293b', fontWeight: '500' }}>
-                            Balance History <span style={{ fontSize: '0.6rem' }}>▼</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={{ overflow: 'hidden', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                        <thead style={{ background: '#f8fafc', fontSize: '0.85rem', fontWeight: '700', color: '#64748b' }}>
-                            <tr>
-                                <th style={{ padding: '16px 24px' }}>Date ↑</th>
-                                <th style={{ padding: '16px 24px' }}>Description</th>
-                                <th style={{ padding: '16px 24px', textAlign: 'right' }}>Used Hours (-)</th>
-                                <th style={{ padding: '16px 24px', textAlign: 'right' }}>Earned Hours (+)</th>
-                                <th style={{ padding: '16px 24px', textAlign: 'right' }}>Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody style={{ fontSize: '0.9rem', color: '#1e293b' }}>
-                            <tr style={{ borderTop: '1px solid #f1f5f9' }}>
-                                <td style={{ padding: '24px' }}>10/29/2022</td>
-                                <td style={{ padding: '24px' }}>
-                                    <div style={{ fontWeight: '600' }}>Moved to a new policy</div>
-                                    <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Vacation Accrual Policy was set to Vacation Full-Time</div>
-                                </td>
-                                <td style={{ padding: '24px', textAlign: 'right' }}>-</td>
-                                <td style={{ padding: '24px', textAlign: 'right' }}>-</td>
-                                <td style={{ padding: '24px', textAlign: 'right', fontWeight: '700' }}>0.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div >
-            <AccrualStartDateModal
-                isOpen={isAccrualModalOpen}
-                onClose={() => setIsAccrualModalOpen(false)}
-                userName={stats?.user?.name}
-                jobTitle={stats?.user?.job_title}
-            />
-        </div >
-    );
-};
-
+// Components moved to separate files
 // --- Components ---
 const DashboardCard = ({ id, index, title, icon: Icon, children, padding = "24px", colSpan = 4, fullWidth = false, expandedCard, setExpandedCard, hideActions = false }) => {
     const isExpanded = expandedCard === id;
@@ -856,7 +618,7 @@ const Hiring = () => {
             </div>
 
             <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h3 className="font-heading" style={{ fontSize: '1.2rem' }}>Job Openings</h3>
+                <h3 className="font-heading" style={{ fontSize: '14px' }}>Job Openings</h3>
                 <input
                     type="text"
                     className="glass-input"
@@ -1000,7 +762,7 @@ const Reports = () => {
                 <div className="report-content glass-panel" style={{ padding: '40px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
                         <div>
-                            <h3 className="font-heading" style={{ fontSize: '1.4rem' }}>{selectedReport === 'headcount' ? 'Headcount Trend' : 'Leave Utilization'}</h3>
+                            <h3 className="font-heading" style={{ fontSize: '14px' }}>{selectedReport === 'headcount' ? 'Headcount Trend' : 'Leave Utilization'}</h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Showing data for Acme Corp - Scranton Branch</p>
                         </div>
                         <button className="btn-primary" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>Export CSV</button>
@@ -1165,17 +927,9 @@ const Settings = () => {
                         <div
                             key={i}
                             onClick={() => setActiveSubTab(cat.label)}
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px',
-                                borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem',
-                                background: activeSubTab === cat.label ? 'var(--primary)' : 'transparent',
-                                color: activeSubTab === cat.label ? 'white' : 'var(--text-main)',
-                                fontWeight: activeSubTab === cat.label ? '700' : '500',
-                                marginBottom: '2px',
-                                transition: 'all 0.2s ease'
-                            }}
+                            className={`nav-highlight-item ${activeSubTab === cat.label ? 'active' : ''}`}
                         >
-                            <span style={{ fontSize: '1.1rem' }}>{cat.icon}</span>
+                            <span style={{ fontSize: '1.2rem', display: 'flex' }}>{cat.icon}</span>
                             <span>{cat.label}</span>
                         </div>
                     ))}
@@ -1214,6 +968,7 @@ const EmployeeProfile = () => {
     const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
     const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
     const [adjustCategory, setAdjustCategory] = useState('Vacation');
+    const [isAccrualStartModalOpen, setIsAccrualStartModalOpen] = useState(false);
     const [uploading, setUploading] = useState(false);
 
     const getBalance = (type) => {
@@ -1231,7 +986,6 @@ const EmployeeProfile = () => {
 
         const employeeUrl = !id || id === 'me' ? '/api/employees/me' : `/api/employees/${id}`;
 
-        // Fetch employee first, then dependent resources using real id
         fetch(employeeUrl)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1241,7 +995,6 @@ const EmployeeProfile = () => {
                 setEmployee(data);
                 const realId = data.id;
 
-                // Chain dependent fetches
                 fetch(`/api/employees/${realId}/time-off`)
                     .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
                     .then(setTimeOffData)
@@ -1299,14 +1052,13 @@ const EmployeeProfile = () => {
 
     useEffect(() => {
         refreshData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const renderTabContent = () => {
         if (loading) return <p>Loading employee data...</p>;
         if (error) return <p style={{ color: 'crimson' }}>{error}</p>;
         if (!employee) return <p>Employee not found.</p>;
-        // Check if dynamic tab
+
         const dynamicTab = customTabs.find(t => t.label === activeTab);
         if (dynamicTab) {
             return (
@@ -1340,13 +1092,13 @@ const EmployeeProfile = () => {
                 <TimeOffModule
                     stats={timeOffData ? { personal_balances: timeOffData.balances } : null}
                     getBalance={getBalance}
-                    isCalculatorOpen={isCalculatorOpen}
                     setIsCalculatorOpen={setIsCalculatorOpen}
                     setIsModalOpen={setIsModalOpen}
                     onAdjust={(cat) => {
                         setAdjustCategory(cat);
                         setIsAdjustModalOpen(true);
                     }}
+                    onOpenAccrualModal={() => setIsAccrualStartModalOpen(true)}
                 />
             );
             case 'Documents': return (
@@ -1402,9 +1154,9 @@ const EmployeeProfile = () => {
                 setActiveTab={setActiveTab}
                 customTabs={customTabs}
             />
-            <div className="module-content glass-panel" style={{ marginTop: '24px', padding: '32px' }}>
+            <Box sx={{ mt: 3 }}>
                 {renderTabContent()}
-            </div>
+            </Box>
 
             <TimeOffRequestModal
                 isOpen={isModalOpen}
@@ -1425,6 +1177,12 @@ const EmployeeProfile = () => {
                 employee={employee}
                 onRefresh={refreshData}
             />
+            <AccrualStartDateModal
+                isOpen={isAccrualStartModalOpen}
+                onClose={() => setIsAccrualStartModalOpen(false)}
+                userName={employee?.name}
+                jobTitle={employee?.job_title}
+            />
         </div>
     );
 };
@@ -1436,13 +1194,14 @@ const App = () => {
         <Router>
             <div className={`app-container ${isCollapsed ? 'collapsed-sidebar' : ''}`}>
                 <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
-                <div className="main-content">
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <Header />
-                    <div className="content-container">
+                    <Box sx={{ flex: 1, overflowY: 'auto', p: 4, bgcolor: '#f8fafc' }}>
                         <Routes>
                             <Route path="/" element={<Navigate to="/home" replace />} />
                             <Route path="/home" element={<Home />} />
-                            <Route path="/people" element={<People />} />
+                            <Route path="/people" element={<PeoplePage />} />
+                            <Route path="/people/add" element={<AddEmployeePage />} />
                             <Route path="/hiring" element={<Hiring />} />
                             <Route path="/reports" element={<Reports />} />
                             <Route path="/settings" element={<Settings />} />
@@ -1451,8 +1210,8 @@ const App = () => {
                             {/* Fallback */}
                             <Route path="*" element={<Navigate to="/home" replace />} />
                         </Routes>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         </Router>
     );

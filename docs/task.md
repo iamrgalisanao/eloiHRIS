@@ -5,13 +5,14 @@ Last Updated: 2026-01-27
 
 ## Phase 1 — Database & Models
 
-- [ ] Migration `create_employee_field_values_table`
-  - [ ] Columns: `id`, `organization_id`, `category`, `label`, `label_slug`, `sort_order`, timestamps
-  - [ ] Indexes: unique(`organization_id`,`category`,`label_slug`), index(`organization_id`,`category`,`sort_order`)
-- [ ] Model `App/Models/EmployeeFieldValue.php`
-  - [ ] Use `BelongsToOrganization`
-  - [ ] `$fillable = ['organization_id','category','label','label_slug','sort_order']`
-  - [ ] Helper to compute `label_slug` (lowercase/trim/collapse-space)
+- [x] Migration `create_employee_field_values_table`
+  - [x] Columns: `id`, `organization_id`, `category`, `label`, `label_slug`, `sort_order`, timestamps
+  - [x] Indexes: unique(`organization_id`,`category`,`label_slug`), index(`organization_id`,`category`,`sort_order`)
+- [x] Model `App/Models/EmployeeFieldValue.php`
+  - [x] Use `BelongsToOrganization`
+  - [x] `$fillable = ['organization_id','category','label','label_slug','sort_order']`
+  - [x] Helper to compute `label_slug` (lowercase/trim/collapse-space)
+- [x] Optional improvement: Composite indexes on `job_info` for counts/cascade (org+department/division/job_title/location)
 - [ ] Optional seed: insert distinct values from `job_info` for mapped categories
 
 ## Phase 2 — API Layer

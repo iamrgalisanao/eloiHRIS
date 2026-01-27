@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\HiringController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SettingsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\EmployeeFieldController;
 
 Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 Route::get('/hiring/stats', [HiringController::class, 'stats']);
@@ -28,3 +29,13 @@ Route::get('/employees/{id}/custom-tabs', [EmployeeController::class, 'customTab
 Route::get('/employees/{id}/documents', [DocumentController::class, 'index']);
 Route::post('/employees/{id}/documents', [DocumentController::class, 'store']);
 Route::post('/time-off/request', [TimeOffRequestController::class, 'store']);
+
+// Employee Fields (Settings) — protected
+Route::middleware(['auth:sanctum', 'can:manage-settings', 'throttle:60,1'])
+    ->prefix('employee-fields')
+    ->group(function () {
+        Route::get('/', [EmployeeFieldController::class, 'index']);
+        Route::post('/{category}', [EmployeeFieldController::class, 'store']);
+        Route::put('/{category}/{id}', [EmployeeFieldController::class, 'update']);
+        Route::delete('/{category}/{id}', [EmployeeFieldController::class, 'destroy']);
+    });

@@ -95,7 +95,7 @@ const TimeOffModule = ({ getBalance, setIsCalculatorOpen, setIsModalOpen, onAdju
                     startIcon={<SettingsOutlined />}
                     endIcon={<KeyboardArrowDown sx={{ fontSize: '0.8rem' }} />}
                     onClick={(e) => handleMenuOpen(e, 'header')}
-                    sx={{ borderRadius: '24px', fontWeight: 700, color: 'primary.main', borderColor: 'primary.main' }}
+                    sx={{ borderRadius: 'var(--radius-standard)', fontWeight: 700, color: 'primary.main', borderColor: 'primary.main' }}
                 >
                     Settings
                 </Button>
@@ -106,8 +106,8 @@ const TimeOffModule = ({ getBalance, setIsCalculatorOpen, setIsModalOpen, onAdju
                 {balanceItems.map((item, i) => (
                     <Grid size={{ xs: 12, md: 4 }} key={i}>
                         <Card sx={{
-                            borderRadius: 5,
-                            border: '1px solid #f1f5f9',
+                            borderRadius: 'var(--radius-standard)',
+                            border: '1px solid var(--border-light)',
                             boxShadow: 'none',
                             bgcolor: '#fff',
                             p: 2
@@ -139,7 +139,7 @@ const TimeOffModule = ({ getBalance, setIsCalculatorOpen, setIsModalOpen, onAdju
                                         <Edit fontSize="small" color="primary" />
                                     </IconButton>
                                     <Box sx={{ ml: 'auto' }}>
-                                        <IconButton size="small" variant="outlined" onClick={(e) => handleMenuOpen(e, i)} sx={{ border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                                        <IconButton size="small" variant="outlined" onClick={(e) => handleMenuOpen(e, i)} sx={{ border: '1px solid var(--border-light)', borderRadius: 'var(--radius-standard)' }}>
                                             <Settings fontSize="small" color="action" />
                                             <KeyboardArrowDown sx={{ fontSize: '0.5rem', ml: 0.5 }} />
                                         </IconButton>
@@ -152,7 +152,7 @@ const TimeOffModule = ({ getBalance, setIsCalculatorOpen, setIsModalOpen, onAdju
             </Grid>
 
             {/* Upcoming Section */}
-            <Paper sx={{ p: 4, borderRadius: 6, mb: 5, border: '1px solid #f1f5f9', boxShadow: 'none' }}>
+            <Paper sx={{ p: 4, borderRadius: 'var(--radius-standard)', mb: 5, border: '1px solid var(--border-light)', boxShadow: 'none' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3, color: 'primary.main' }}>
                     <Schedule fontSize="small" />
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>Upcoming Time Off</Typography>
@@ -179,7 +179,7 @@ const TimeOffModule = ({ getBalance, setIsCalculatorOpen, setIsModalOpen, onAdju
             </Paper>
 
             {/* History Section */}
-            <Paper sx={{ p: 4, borderRadius: 6, border: '1px solid #f1f5f9', boxShadow: 'none' }}>
+            <Paper sx={{ p: 4, borderRadius: 'var(--radius-standard)', border: '1px solid var(--border-light)', boxShadow: 'none' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4, color: 'primary.main' }}>
                     <History fontSize="small" />
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>History</Typography>

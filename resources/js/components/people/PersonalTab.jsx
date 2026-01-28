@@ -99,17 +99,17 @@ const PersonalTab = ({ employeeId, onUpdate }) => {
                         startIcon={<X size={18} />}
                         onClick={loadData}
                         disabled={saving}
-                        sx={{ borderRadius: '12px', textTransform: 'none', fontWeight: 600 }}
+                        sx={{ borderRadius: 'var(--radius-standard)', textTransform: 'none', fontWeight: 700 }}
                     >
                         Cancel
                     </Button>
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         startIcon={<Save size={18} />}
                         onClick={handleSave}
                         disabled={saving}
-                        sx={{ borderRadius: '12px', textTransform: 'none', fontWeight: 600, px: 3 }}
+                        sx={{ borderRadius: 'var(--radius-standard)', textTransform: 'none', fontWeight: 800, px: 3 }}
                     >
                         {saving ? 'Saving...' : 'Save Changes'}
                     </Button>
@@ -158,10 +158,10 @@ const PersonalTab = ({ employeeId, onUpdate }) => {
 
 // --- Form Wrapper ---
 const FormSection = ({ title, icon, children }) => (
-    <Box className="glass-panel" sx={{ p: 4, bgcolor: '#fff' }}>
+    <Box className="glass-panel" sx={{ p: 4, bgcolor: '#fff', borderRadius: 'var(--radius-standard)' }}>
         <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
             {icon}
-            <Typography variant="h6" sx={{ fontWeight: 800, color: '#22c55e', fontSize: '1.2rem' }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, color: 'var(--primary)', fontSize: '1.2rem' }}>
                 {title}
             </Typography>
         </Stack>

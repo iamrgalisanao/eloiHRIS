@@ -25,7 +25,7 @@ const AccrualStartDateModal = ({ isOpen, onClose, userName, jobTitle }) => {
             maxWidth="sm"
             fullWidth
             PaperProps={{
-                sx: { borderRadius: 4 }
+                sx: { borderRadius: 'var(--radius-standard)' }
             }}
         >
             <DialogTitle sx={{
@@ -85,19 +85,20 @@ const AccrualStartDateModal = ({ isOpen, onClose, userName, jobTitle }) => {
             </DialogContent>
 
             <DialogActions sx={{ px: 4, py: 3, bgcolor: '#f8fafc', gap: 2 }}>
-                <Button onClick={onClose} sx={{ color: 'primary.main', fontWeight: 700, fontSize: '1rem' }}>
+                <Button onClick={onClose} sx={{ color: 'text.secondary', fontWeight: 700, fontSize: '1rem' }}>
                     Cancel
                 </Button>
                 <Button
                     onClick={onClose}
                     variant="contained"
+                    color="secondary"
                     sx={{
-                        borderRadius: '30px',
+                        borderRadius: 'var(--radius-standard)',
                         px: 6,
                         py: 1,
-                        fontWeight: 700,
+                        fontWeight: 800,
                         fontSize: '1rem',
-                        boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)'
+                        boxShadow: '0 4px 12px rgba(11, 79, 209, 0.2)'
                     }}
                 >
                     Save

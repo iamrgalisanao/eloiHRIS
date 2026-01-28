@@ -90,14 +90,15 @@ export default function PeoplePage() {
                     variant="contained"
                     startIcon={<Add />}
                     onClick={() => navigate('/people/add')}
-                    className="btn-primary"
                     sx={{
+                        bgcolor: 'var(--secondary)',
+                        '&:hover': { bgcolor: 'var(--secondary-hover)' },
                         textTransform: 'none',
                         fontWeight: 700,
-                        borderRadius: '20px',
+                        borderRadius: 'var(--radius-standard)',
                         px: 3,
                         py: 1.2,
-                        boxShadow: '0 4px 12px rgba(92, 184, 92, 0.2)'
+                        boxShadow: '0 4px 12px rgba(11, 79, 209, 0.2)'
                     }}
                 >
                     New Employee
@@ -164,12 +165,12 @@ export default function PeoplePage() {
             <Box sx={{
                 flex: 1,
                 bgcolor: '#fff',
-                borderRadius: '16px',
+                borderRadius: 'var(--radius-standard)',
                 border: '1px solid var(--border-light)',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
             }}>
                 {error && (
                     <Box sx={{ p: 5, textAlign: 'center', color: 'error.main' }}>

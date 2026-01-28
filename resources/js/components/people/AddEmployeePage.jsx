@@ -34,26 +34,26 @@ const FormSection = memo(({ title, icon: Icon, children }) => (
     <Box sx={{ mb: 6 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
             <Box sx={{
-                bgcolor: '#f1f8f1',
+                bgcolor: 'rgba(40, 116, 17, 0.08)',
                 p: 0.8,
-                borderRadius: 1.5,
+                borderRadius: 'var(--radius-standard)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#3c763d'
+                color: 'var(--primary)'
             }}>
                 <Icon sx={{ fontSize: 18 }} />
             </Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '14px', color: '#3c763d', fontFamily: "'Outfit', sans-serif" }}>{title}</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 800, fontSize: '14px', color: 'var(--primary)', fontFamily: "'Inter', sans-serif" }}>{title}</Typography>
         </Box>
-        <Paper elevation={0} sx={{ p: 4, border: '1px solid #f0f0f0', borderRadius: 3, bgcolor: '#fff' }}>
+        <Paper elevation={0} sx={{ p: 4, border: '1px solid var(--border-light)', borderRadius: 'var(--radius-standard)', bgcolor: '#fff' }}>
             {children}
         </Paper>
     </Box>
 ));
 
 const Label = ({ children, required }) => (
-    <Typography variant="caption" sx={{ color: '#333', fontWeight: 600, display: 'block', mb: 0.5, fontFamily: "'Outfit', sans-serif", fontSize: '14px' }}>
+    <Typography variant="caption" sx={{ color: '#48413F', fontWeight: 700, display: 'block', mb: 0.5, fontFamily: "'Inter', sans-serif", fontSize: '14px' }}>
         {children}{required ? '*' : ''}
     </Typography>
 );
@@ -64,7 +64,7 @@ const StyledTextField = memo((props) => (
         size="small"
         {...props}
         sx={{
-            '& .MuiOutlinedInput-root': { borderRadius: 2 },
+            '& .MuiOutlinedInput-root': { borderRadius: 'var(--radius-standard)' },
             ...props.sx
         }}
     />
@@ -75,7 +75,7 @@ const StyledSelect = memo(({ children, ...props }) => (
         <Select
             displayEmpty
             {...props}
-            sx={{ borderRadius: 2 }}
+            sx={{ borderRadius: 'var(--radius-standard)' }}
         >
             {children}
         </Select>
@@ -209,7 +209,7 @@ export default function AddEmployeePage() {
     return (
         <Box sx={{ maxWidth: 1600, mx: 'auto', p: 4, bgcolor: '#fbfcfb', minHeight: '100vh' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h4" sx={{ color: '#3c763d', fontWeight: 700, fontFamily: "'Outfit', sans-serif" }}>New Employee</Typography>
+                <Typography variant="h4" sx={{ color: 'var(--primary)', fontWeight: 800, fontFamily: "'Inter', sans-serif" }}>New Employee</Typography>
                 <Typography
                     variant="caption"
                     sx={{ color: '#0066cc', cursor: 'pointer', '&:hover': { textDecoration: 'underline' }, fontFamily: "'Outfit', sans-serif" }}
@@ -221,19 +221,19 @@ export default function AddEmployeePage() {
             {error && <Alert severity="error" sx={{ mb: 4, borderRadius: 2 }}>{error}</Alert>}
 
             <Paper elevation={0} sx={{
-                p: 3, mb: 4, borderRadius: 3,
-                bgcolor: '#fff', border: '1px solid #f0f0f0',
+                p: 3, mb: 4, borderRadius: 'var(--radius-standard)',
+                bgcolor: '#fff', border: '1px solid var(--border-light)',
                 display: 'flex', flexDirection: 'column', gap: 1
             }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#3c763d', fontFamily: "'Outfit', sans-serif" }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'var(--primary)', fontFamily: "'Inter', sans-serif" }}>
                     Make everyone's life a little bit easier and send a New Hire Packet.
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#666', mb: 1, fontFamily: "'Outfit', sans-serif" }}>
+                <Typography variant="caption" sx={{ color: '#666', mb: 1, fontFamily: "'Inter', sans-serif" }}>
                     Your new employees will be able to enter their own personal information, sign paperwork, see their team, and more.
                 </Typography>
                 <FormControlLabel
-                    control={<Checkbox size="small" sx={{ color: '#ccc', p: 0.5, '&.Mui-checked': { color: '#3c763d' } }} />}
-                    label={<Typography variant="caption" sx={{ color: '#666', ml: 0.5, fontFamily: "'Outfit', sans-serif" }}>Send this new employee a new hire packet</Typography>}
+                    control={<Checkbox size="small" sx={{ color: '#ccc', p: 0.5, '&.Mui-checked': { color: 'var(--primary)' } }} />}
+                    label={<Typography variant="caption" sx={{ color: '#666', ml: 0.5, fontFamily: "'Inter', sans-serif" }}>Send this new employee a new hire packet</Typography>}
                     sx={{ ml: 0 }}
                 />
             </Paper>
@@ -310,9 +310,9 @@ export default function AddEmployeePage() {
                     onClick={handleSave}
                     disabled={loading}
                     sx={{
-                        bgcolor: '#3c763d', '&:hover': { bgcolor: '#2d5a2d' },
-                        borderRadius: 2, textTransform: 'none', px: 4, py: 1, fontWeight: 700,
-                        fontFamily: "'Outfit', sans-serif"
+                        bgcolor: 'var(--secondary)', '&:hover': { bgcolor: 'var(--secondary-hover)' },
+                        borderRadius: 'var(--radius-standard)', textTransform: 'none', px: 4, py: 1, fontWeight: 800,
+                        fontFamily: "'Inter', sans-serif"
                     }}
                 >
                     {loading ? 'Saving...' : 'Save Employee'}
@@ -650,38 +650,38 @@ const AccessSection = memo(({ allow_access, onChange }) => (
                 onClick={() => onChange({ target: { name: 'allow_access', value: true } })}
                 sx={{
                     flex: 1, p: 3, cursor: 'pointer', border: '1px solid',
-                    borderColor: allow_access ? '#3c763d' : '#f0f0f0',
-                    bgcolor: allow_access ? '#f3f9f3' : '#fff',
-                    borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2.5,
+                    borderColor: allow_access ? 'var(--primary)' : 'var(--border-light)',
+                    bgcolor: allow_access ? 'rgba(40, 116, 17, 0.05)' : '#fff',
+                    borderRadius: 'var(--radius-standard)', display: 'flex', alignItems: 'center', gap: 2.5,
                     transition: 'all 0.2s',
-                    '&:hover': { border: '1px solid #3c763d' }
+                    '&:hover': { border: '1px solid var(--primary)' }
                 }}
             >
-                <Box sx={{ p: 1.5, bgcolor: allow_access ? '#3c763d' : '#f5f5f5', borderRadius: 2, color: allow_access ? 'white' : '#999' }}>
+                <Box sx={{ p: 1.5, bgcolor: allow_access ? 'var(--primary)' : '#f5f5f5', borderRadius: 'var(--radius-standard)', color: allow_access ? 'white' : '#999' }}>
                     <Person sx={{ fontSize: 24 }} />
                 </Box>
                 <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: allow_access ? '#3c763d' : '#333', fontSize: '0.95rem', fontFamily: "'Outfit', sans-serif" }}>Allow Access to BambooHR</Typography>
-                    <Typography variant="caption" sx={{ color: '#666', lineHeight: 1.4, display: 'block', fontSize: '0.8rem', fontFamily: "'Outfit', sans-serif" }}>They will be able to login to BambooHR using the access level you choose.</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: allow_access ? 'var(--primary)' : '#333', fontSize: '0.95rem', fontFamily: "'Inter', sans-serif" }}>Allow Access to BambooHR</Typography>
+                    <Typography variant="caption" sx={{ color: '#666', lineHeight: 1.4, display: 'block', fontSize: '0.8rem', fontFamily: "'Inter', sans-serif" }}>They will be able to login to BambooHR using the access level you choose.</Typography>
                 </Box>
             </Box>
             <Box
                 onClick={() => onChange({ target: { name: 'allow_access', value: false } })}
                 sx={{
                     flex: 1, p: 3, cursor: 'pointer', border: '1px solid',
-                    borderColor: !allow_access ? '#3c763d' : '#f0f0f0',
-                    bgcolor: !allow_access ? '#f3f9f3' : '#fff',
-                    borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2.5,
+                    borderColor: !allow_access ? 'var(--primary)' : 'var(--border-light)',
+                    bgcolor: !allow_access ? 'rgba(40, 116, 17, 0.05)' : '#fff',
+                    borderRadius: 'var(--radius-standard)', display: 'flex', alignItems: 'center', gap: 2.5,
                     transition: 'all 0.2s',
-                    '&:hover': { border: '1px solid #3c763d' }
+                    '&:hover': { border: '1px solid var(--primary)' }
                 }}
             >
-                <Box sx={{ p: 1.5, bgcolor: !allow_access ? '#3c763d' : '#f5f5f5', borderRadius: 2, color: !allow_access ? 'white' : '#999' }}>
+                <Box sx={{ p: 1.5, bgcolor: !allow_access ? 'var(--primary)' : '#f5f5f5', borderRadius: 'var(--radius-standard)', color: !allow_access ? 'white' : '#999' }}>
                     <VpnKey sx={{ fontSize: 24 }} />
                 </Box>
                 <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: !allow_access ? '#3c763d' : '#333', fontSize: '0.95rem', fontFamily: "'Outfit', sans-serif" }}>No Access</Typography>
-                    <Typography variant="caption" sx={{ color: '#666', lineHeight: 1.4, display: 'block', fontSize: '0.8rem', fontFamily: "'Outfit', sans-serif" }}>They won't have access and will not be able to login to BambooHR.</Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: !allow_access ? 'var(--primary)' : '#333', fontSize: '0.95rem', fontFamily: "'Inter', sans-serif" }}>No Access</Typography>
+                    <Typography variant="caption" sx={{ color: '#666', lineHeight: 1.4, display: 'block', fontSize: '0.8rem', fontFamily: "'Inter', sans-serif" }}>They won't have access and will not be able to login to BambooHR.</Typography>
                 </Box>
             </Box>
         </Stack>

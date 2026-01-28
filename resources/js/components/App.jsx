@@ -55,10 +55,10 @@ const DashboardCard = ({ id, index, title, icon: Icon, children, padding = "24px
                 ...style
             }}
         >
-            <div className="card-header" style={{ borderBottom: '1px solid #edf2f7', padding: '16px 24px' }}>
-                <div className="card-title-content" style={{ color: '#2d4a22', gap: '12px' }}>
+            <div className="card-header" style={{ borderBottom: '1px solid var(--border-light)', padding: '16px 24px' }}>
+                <div className="card-title-content" style={{ color: 'var(--primary)', gap: '12px' }}>
                     {Icon && <Icon size={20} strokeWidth={2.5} />}
-                    <span className="font-heading" style={{ fontSize: '0.95rem', fontWeight: 800 }}>{title}</span>
+                    <span className="font-heading" style={{ fontSize: '0.9rem', fontWeight: 800 }}>{title}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {headerAction}
@@ -223,20 +223,20 @@ const Home = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 1 }}>
                             <Box sx={{ flex: 1, textAlign: 'center' }}>
                                 <Typography variant="caption" sx={{ color: '#000', fontWeight: 700, display: 'block', mb: 1.5, letterSpacing: '0.4px', fontSize: '0.85rem' }}>Sick</Typography>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, color: '#2d4a22', mb: 0.5 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, color: 'var(--text-main)', mb: 0.5 }}>
                                     <Clock size={22} strokeWidth={2.5} />
                                     <Typography variant="h3" sx={{ fontWeight: 800, fontSize: '2.4rem' }}>{getBalance('Sick')}</Typography>
                                 </Box>
-                                <Typography variant="caption" sx={{ color: '#5cb85c', fontWeight: 800, fontSize: '0.85rem' }}>hours available</Typography>
+                                <Typography variant="caption" sx={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.85rem' }}>hours available</Typography>
                             </Box>
 
                             <Box sx={{ flex: 1, textAlign: 'center' }}>
                                 <Typography variant="caption" sx={{ color: '#000', fontWeight: 700, display: 'block', mb: 1.5, letterSpacing: '0.4px', fontSize: '0.85rem' }}>Bereavement</Typography>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, color: '#2d4a22', mb: 0.5 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, color: 'var(--text-main)', mb: 0.5 }}>
                                     <Briefcase size={22} strokeWidth={2.5} />
-                                    <Typography variant="h3" sx={{ fontWeight: 800, fontSize: '2.4rem', color: '#2d4a22' }}>0</Typography>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, fontSize: '2.4rem', color: 'var(--text-main)' }}>0</Typography>
                                 </Box>
-                                <Typography variant="caption" sx={{ color: '#5cb85c', fontWeight: 800, fontSize: '0.85rem' }}>days used (YTD)</Typography>
+                                <Typography variant="caption" sx={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.85rem' }}>days used (YTD)</Typography>
                             </Box>
 
                             {/* Slider Arrow */}
@@ -250,10 +250,14 @@ const Home = () => {
                         </Box>
 
                         <Stack direction="row" spacing={1.5} alignItems="center">
-                            <button className="glass-panel" style={{ flex: 1, height: '48px', borderRadius: '24px', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#2d4a22', border: '1.5px solid #5cb85c', background: '#fff', boxShadow: 'none' }} onClick={() => setIsModalOpen(true)}>
+                            <button
+                                className="btn-primary"
+                                style={{ flex: 1, height: '48px', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+                                onClick={() => setIsModalOpen(true)}
+                            >
                                 <CalendarPlus size={20} /> Request Time Off
                             </button>
-                            <button className="glass-panel" style={{ width: 48, height: 48, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2d4a22', border: '1.5px solid #5cb85c', background: '#fff', boxShadow: 'none' }}>
+                            <button className="glass-panel" style={{ width: 48, height: 48, borderRadius: 'var(--radius-standard)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', border: '1.5px solid var(--primary)', background: '#fff', boxShadow: 'none' }}>
                                 <Calculator size={22} />
                             </button>
                         </Stack>
@@ -683,7 +687,7 @@ const App = () => {
                 <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <Header />
-                    <Box sx={{ flex: 1, overflowY: 'auto', bgcolor: '#f8fafc' }}>
+                    <Box sx={{ flex: 1, overflowY: 'auto', bgcolor: 'var(--bg-main)' }}>
                         <Routes>
                             <Route path="/" element={<Navigate to="/home" replace />} />
                             <Route path="/home" element={<Home />} />

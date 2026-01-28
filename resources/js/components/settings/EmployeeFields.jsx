@@ -156,8 +156,8 @@ export default function EmployeeFields() {
             <h3 className="font-heading" style={{ margin: 0, fontSize: '14px' }}>{currentCatLabel}</h3>
             <div style={{ display: 'flex', gap: 8 }}>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder={`New ${currentCatLabel}`}
-                style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }} />
-              <button onClick={onAdd} className="btn-primary" style={{ padding: '8px 14px', borderRadius: 8 }}>Add</button>
+                style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-standard)' }} />
+              <button onClick={onAdd} className="btn-primary" style={{ padding: '8px 14px', borderRadius: 'var(--radius-standard)', fontWeight: 800 }}>Add</button>
             </div>
           </div>
           {loading ? <div>Loading…</div> : error ? <div style={{ color: 'crimson' }}>{error}</div> : (

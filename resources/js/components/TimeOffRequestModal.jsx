@@ -67,7 +67,7 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
             maxWidth="sm"
             fullWidth
             PaperProps={{
-                sx: { borderRadius: 4 }
+                sx: { borderRadius: 'var(--radius-standard)' }
             }}
         >
             <DialogTitle sx={{
@@ -179,13 +179,14 @@ const TimeOffRequestModal = ({ isOpen, onClose, onRefresh, employee }) => {
                     <Button
                         type="submit"
                         variant="contained"
+                        color="secondary"
                         disabled={loading}
                         sx={{
-                            borderRadius: '30px',
+                            borderRadius: 'var(--radius-standard)',
                             px: 5,
                             py: 1,
-                            fontWeight: 700,
-                            boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)'
+                            fontWeight: 800,
+                            boxShadow: '0 4px 12px rgba(11, 79, 209, 0.2)'
                         }}
                     >
                         {loading ? 'Saving...' : 'Save'}

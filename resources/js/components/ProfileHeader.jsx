@@ -57,7 +57,7 @@ const ProfileHeader = ({ employee, activeTab, setActiveTab, customTabs = [] }) =
                 top: 0,
                 width: 120,
                 height: 120,
-                borderRadius: '16px',
+                borderRadius: 'var(--radius-standard)',
                 overflow: 'hidden',
                 border: '4px solid #fff',
                 bgcolor: 'primary.main',
@@ -91,17 +91,18 @@ const ProfileHeader = ({ employee, activeTab, setActiveTab, customTabs = [] }) =
                 {/* Left: Name and Title */}
                 <Box>
                     <Typography variant="h4" sx={{
-                        fontWeight: 700,
+                        fontWeight: 800,
                         color: '#fff',
                         fontSize: '1.75rem',
                         mb: 0.5,
-                        fontFamily: '"Playfair Display", "Georgia", serif'
+                        fontFamily: '"Inter", sans-serif'
                     }}>
                         {employee?.full_name || employee?.name || 'Loading...'}
                     </Typography>
                     <Typography variant="body1" sx={{
                         color: 'rgba(255,255,255,0.95)',
-                        fontSize: '0.95rem',
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
                         display: 'flex',
                         alignItems: 'center',
                         gap: 0.5
@@ -128,10 +129,10 @@ const ProfileHeader = ({ employee, activeTab, setActiveTab, customTabs = [] }) =
                             color: 'primary.main',
                             '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
                             textTransform: 'none',
-                            fontWeight: 600,
+                            fontWeight: 700,
                             px: 3,
                             py: 1,
-                            borderRadius: '20px',
+                            borderRadius: 'var(--radius-standard)',
                             boxShadow: 'none',
                             fontSize: '0.875rem'
                         }}
@@ -208,7 +209,7 @@ const ProfileHeader = ({ employee, activeTab, setActiveTab, customTabs = [] }) =
                                     py: 1,
                                     minHeight: 40,
                                     fontSize: '0.875rem',
-                                    borderRadius: 0,
+                                    borderRadius: 'var(--radius-standard) var(--radius-standard) 0 0',
                                     bgcolor: isSelected ? '#fff' : 'transparent',
                                     color: isSelected ? 'primary.main' : 'rgba(255,255,255,0.95)',
                                     minWidth: 'auto',

@@ -66,7 +66,7 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
             maxWidth="sm"
             fullWidth
             PaperProps={{
-                sx: { borderRadius: 4 }
+                sx: { borderRadius: 'var(--radius-standard)' }
             }}
         >
             <DialogTitle sx={{
@@ -128,10 +128,10 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
                         variant="outlined"
                         sx={{
                             p: 4,
-                            borderRadius: 4,
-                            bgcolor: '#f8fafc',
+                            borderRadius: 'var(--radius-standard)',
+                            bgcolor: 'var(--bg-alt)',
                             textAlign: 'center',
-                            border: '1px solid #e2e8f0'
+                            border: '1px solid var(--border-light)'
                         }}
                     >
                         <Typography variant="h1" color="primary" sx={{ fontWeight: 800, fontSize: '3.5rem', lineHeight: 1 }}>
@@ -196,12 +196,13 @@ const TimeOffCalculatorModal = ({ isOpen, onClose, userName, jobTitle }) => {
                 <Button
                     onClick={onClose}
                     variant="contained"
+                    color="secondary"
                     sx={{
-                        borderRadius: '30px',
+                        borderRadius: 'var(--radius-standard)',
                         px: 6,
                         py: 1,
-                        fontWeight: 700,
-                        boxShadow: '0 4px 12px rgba(34, 197, 94, 0.2)'
+                        fontWeight: 800,
+                        boxShadow: '0 4px 12px rgba(11, 79, 209, 0.2)'
                     }}
                 >
                     Close

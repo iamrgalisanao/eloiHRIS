@@ -84,24 +84,16 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         >
             {/* Logo */}
             <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'flex-start', gap: 2 }}>
-                <Box sx={{
-                    width: 32,
-                    height: 32,
-                    bgcolor: 'primary.main',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fff',
-                    flexShrink: 0
-                }}>
-                    <People sx={{ fontSize: 20 }} />
-                </Box>
-                {!isCollapsed && (
-                    <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main', letterSpacing: '-0.5px', fontFamily: "'Outfit', sans-serif" }}>
-                        HRIS
-                    </Typography>
-                )}
+                <Box
+                    component="img"
+                    src="https://images7.bamboohr.com/745001/logos/cropped.jpg?v=26"
+                    alt="Logo"
+                    sx={{
+                        height: isCollapsed ? 30 : 36,
+                        width: 'auto',
+                        objectFit: 'contain'
+                    }}
+                />
             </Box>
 
             <List sx={{ flex: 1, px: 2, py: 2 }}>
@@ -111,14 +103,14 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                             component={NavLink}
                             to={item.path}
                             sx={{
-                                borderRadius: 3,
+                                borderRadius: 'var(--radius-standard)',
                                 minHeight: 48,
                                 justifyContent: isCollapsed ? 'center' : 'flex-start',
                                 px: 2.5,
                                 color: 'text.secondary',
                                 transition: 'all 0.2s',
                                 '&.active': {
-                                    bgcolor: 'primary.main',
+                                    bgcolor: 'var(--primary)',
                                     color: '#fff',
                                     fontWeight: 700,
                                     '& .MuiListItemIcon-root': {
@@ -126,10 +118,10 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                                     }
                                 },
                                 '&:hover': {
-                                    bgcolor: 'rgba(34, 197, 94, 0.04)',
-                                    color: 'primary.main',
+                                    bgcolor: 'rgba(40, 116, 17, 0.06)',
+                                    color: 'var(--primary)',
                                     '& .MuiListItemIcon-root': {
-                                        color: 'primary.main',
+                                        color: 'var(--primary)',
                                     }
                                 }
                             }}
@@ -151,7 +143,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                                     primaryTypographyProps={{
                                         fontSize: '0.95rem',
                                         fontWeight: 'inherit',
-                                        fontFamily: "'Outfit', sans-serif"
+                                        fontFamily: "'Inter', sans-serif"
                                     }}
                                 />
                             )}

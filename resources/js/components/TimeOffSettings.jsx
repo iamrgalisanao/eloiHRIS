@@ -117,11 +117,11 @@ const TimeOffSettings = () => {
                                         selected={activeTab === item.id}
                                         onClick={() => setActiveTab(item.id)}
                                         sx={{
-                                            borderRadius: 2,
+                                            borderRadius: 'var(--radius-standard)',
                                             mb: 1,
                                             '&.Mui-selected': {
-                                                bgcolor: 'action.selected',
-                                                '&:hover': { bgcolor: 'action.hover' }
+                                                bgcolor: 'rgba(11, 79, 209, 0.08)',
+                                                '&:hover': { bgcolor: 'rgba(11, 79, 209, 0.12)' }
                                             }
                                         }}
                                     >
@@ -180,18 +180,17 @@ const TimeOffSettings = () => {
                             </Box>
 
                             <Button
-                                variant="outlined"
+                                variant="contained"
                                 startIcon={<Add />}
                                 onClick={() => setIsNewPolicyModalOpen(true)}
                                 sx={{
-                                    borderRadius: '24px',
+                                    borderRadius: 'var(--radius-standard)',
                                     textTransform: 'none',
-                                    fontWeight: 700,
+                                    fontWeight: 800,
                                     px: 3,
                                     mb: 4,
-                                    color: 'primary.main',
-                                    borderColor: 'primary.main',
-                                    '&:hover': { borderColor: 'primary.dark', bgcolor: 'primary.light', color: 'white' }
+                                    bgcolor: 'var(--secondary)',
+                                    '&:hover': { bgcolor: 'var(--secondary-hover)' }
                                 }}
                             >
                                 New Policy
@@ -201,8 +200,8 @@ const TimeOffSettings = () => {
                                 {visibleCards.map((card, i) => (
                                     <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={i}>
                                         <Card sx={{
-                                            borderRadius: 4,
-                                            border: '1px solid #f1f5f9',
+                                            borderRadius: 'var(--radius-standard)',
+                                            border: '1px solid var(--border-light)',
                                             boxShadow: 'none',
                                             '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.05)' },
                                             transition: 'box-shadow 0.2s',

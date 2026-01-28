@@ -1,29 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import './people.css';
 
 :root {
-    /* Colors - HSL for better harmony */
-    --primary-h: 142;
-    --primary-s: 45%;
-    --primary-l: 54%;
-    --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
-    --primary-hover: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 10%));
+    /* Eloisoft Brand Colors */
+    --primary: #287411;
+    /* Bamboo Green */
+    --primary-hover: #1e5a0d;
+    --secondary: #0B4FD1;
+    /* Action Blue */
+    --secondary-hover: #0841ad;
 
-    --bg-main: #f8fafc;
+    --bg-main: #FFFFFF;
+    --bg-alt: #f8fafc;
+
     --sidebar-w: 260px;
     --sidebar-collapsed-w: 80px;
     --header-h: 70px;
 
-    /* Neutral Palette */
-    --text-main: #1e293b;
+    /* Neutral Palette - Eloisoft Muted Cocoa & Sand Gray */
+    --text-main: #48413F;
     --text-muted: #64748b;
-    --border-light: #e2e8f0;
+    --border-light: #C6C2BF;
 
-    /* Glassmorphism Tokens */
+    /* UI Tokens */
+    --radius-standard: 8px;
+
+    /* Glassmorphism Tokens (Refined) */
     --glass-bg: rgba(255, 255, 255, 0.9);
-    --glass-blur: 12px;
-    --glass-border: #e2e8f0;
-    --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --glass-blur: 8px;
+    --glass-border: var(--border-light);
+    --glass-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 * {
@@ -33,9 +39,9 @@
 }
 
 body {
-    background-color: var(--bg-main);
+    background-color: var(--bg-alt);
     color: var(--text-main);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -45,7 +51,8 @@ h1,
 h2,
 h3,
 .font-heading {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
 }
 
 /* Layout Structure */
@@ -125,20 +132,20 @@ h3,
 .logo-circle {
     width: 34px;
     height: 34px;
-    background: #8cd18c;
-    border-radius: 50%;
+    background: var(--primary);
+    border-radius: var(--radius-standard);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    box-shadow: 0 4px 10px rgba(140, 209, 140, 0.3);
+    box-shadow: 0 2px 8px rgba(40, 116, 17, 0.2);
 }
 
 .logo-text {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.1rem;
-    font-weight: 700;
-    color: #8cd18c;
+    font-weight: 800;
+    color: var(--primary);
     letter-spacing: 0.5px;
 }
 
@@ -250,8 +257,8 @@ h3,
 
 .sidebar-logo {
     padding: 0 24px 32px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
     font-size: 1.25rem;
     color: var(--primary);
     letter-spacing: -0.5px;
@@ -436,9 +443,9 @@ h3,
     min-height: 320px;
     width: 100%;
     background: #fff;
-    border-radius: 16px;
+    border-radius: var(--radius-standard);
     border: 1px solid var(--border-light);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-card.is-expanded {
@@ -608,7 +615,7 @@ h3,
 .glass-input:focus {
     background: #fff;
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(92, 184, 92, 0.1);
+    box-shadow: 0 0 0 4px rgba(40, 116, 17, 0.1);
 }
 
 /* Profile Header Refinement */
@@ -659,15 +666,15 @@ h3,
 .profile-avatar.large {
     width: 100px;
     height: 100px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, var(--primary), #8cd18c);
+    border-radius: var(--radius-standard);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
     font-weight: 700;
-    box-shadow: 0 8px 20px rgba(92, 184, 92, 0.2);
+    box-shadow: 0 8px 20px rgba(40, 116, 17, 0.2);
 }
 
 .employee-name {
@@ -689,11 +696,11 @@ h3,
 }
 
 .btn-primary {
-    background: var(--primary);
+    background: var(--secondary);
     color: #fff;
     border: none;
-    padding: 12px 28px;
-    border-radius: 12px;
+    padding: 12px 24px;
+    border-radius: var(--radius-standard);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;

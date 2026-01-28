@@ -110,8 +110,8 @@ export default function FilterPanel({ filters, onChange }) {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     p: 1,
-                    borderRadius: 1,
-                    '&:hover': { bgcolor: '#f8fafc' }
+                    borderRadius: 'var(--radius-standard)',
+                    '&:hover': { bgcolor: 'rgba(40, 116, 17, 0.05)' }
                 }}>
                     <Box
                         sx={{
@@ -167,8 +167,8 @@ export default function FilterPanel({ filters, onChange }) {
                                         width: '100%',
                                         m: 0,
                                         py: 0.5,
-                                        borderRadius: 0.5,
-                                        '&:hover': { bgcolor: '#f8fafc' }
+                                        borderRadius: 'var(--radius-standard)',
+                                        '&:hover': { bgcolor: 'rgba(40, 116, 17, 0.05)' }
                                     }}
                                 />
                             );
@@ -189,7 +189,7 @@ export default function FilterPanel({ filters, onChange }) {
                 p: 1.5,
                 bgcolor: 'var(--primary)',
                 color: '#fff',
-                borderRadius: 1,
+                borderRadius: 'var(--radius-standard)',
                 mb: 2
             }}>
                 <Typography variant="body2" fontWeight={600}>

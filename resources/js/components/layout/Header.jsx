@@ -36,21 +36,16 @@ const Header = () => {
             <Toolbar sx={{ justifyContent: 'space-between', px: 3 }}>
                 {/* Left Side - Logo */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Box sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: 2,
-                        bgcolor: 'primary.main',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#fff'
-                    }}>
-                        <AutoAwesome fontSize="small" />
-                    </Box>
-                    <Typography variant="body2" fontWeight={600} color="text.secondary">
-                        COMPANY LOGO HERE
-                    </Typography>
+                    <Box
+                        component="img"
+                        src="https://images7.bamboohr.com/745001/logos/cropped.jpg?v=26"
+                        alt="Eloisoft Logo"
+                        sx={{
+                            height: 42,
+                            width: 'auto',
+                            objectFit: 'contain'
+                        }}
+                    />
                 </Box>
 
                 {/* Right Side - Actions */}
@@ -93,12 +88,15 @@ const Header = () => {
 
                     {/* Ask Button */}
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         startIcon={<Chat />}
                         sx={{
                             textTransform: 'none',
-                            borderRadius: 2,
-                            px: 2
+                            borderRadius: 'var(--radius-standard)',
+                            bgcolor: 'var(--secondary)',
+                            '&:hover': { bgcolor: 'var(--secondary-hover)' },
+                            px: 2,
+                            fontWeight: 700
                         }}
                     >
                         Ask

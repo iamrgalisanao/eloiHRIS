@@ -83,8 +83,8 @@ export default function ListView({ data, filters, onFilterChange, loading }) {
                                 value={filters.filter || 'all'}
                                 onChange={(e) => onFilterChange({ ...filters, filter: e.target.value })}
                                 sx={{
-                                    borderRadius: '12px',
-                                    fontWeight: 600,
+                                    borderRadius: 'var(--radius-standard)',
+                                    fontWeight: 700,
                                     fontSize: '0.85rem',
                                     '.MuiOutlinedInput-notchedOutline': { borderColor: 'var(--border-light)' }
                                 }}
@@ -135,7 +135,7 @@ export default function ListView({ data, filters, onFilterChange, loading }) {
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
                                 fontSize: '1.2rem',
-                                fontWeight: 600,
+                                fontWeight: 800,
                                 color: 'var(--primary)',
                                 filter: 'blur(0)',
                                 zIndex: 1

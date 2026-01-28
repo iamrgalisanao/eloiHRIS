@@ -63,9 +63,10 @@ export default function DirectoryView({ data }) {
                                 {employees.map(employee => (
                                     <Grid size={12} key={employee.id}>
                                         <Card sx={{
-                                            bgcolor: '#f8fafc',
-                                            borderRadius: 3,
-                                            boxShadow: 'none',
+                                            bgcolor: '#fff',
+                                            borderRadius: 'var(--radius-standard)',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                                            border: '1px solid var(--border-light)',
                                             '&:hover': {
                                                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
                                             },
@@ -82,7 +83,8 @@ export default function DirectoryView({ data }) {
                                                                 width: 100,
                                                                 height: 100,
                                                                 border: '3px solid #fff',
-                                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                                                borderRadius: 'var(--radius-standard)'
                                                             }}
                                                         />
                                                     </Grid>
